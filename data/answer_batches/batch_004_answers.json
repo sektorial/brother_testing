@@ -1,0 +1,502 @@
+{
+  "690": {
+    "correct_index": 2,
+    "correct_text": "координаційним органом",
+    "confidence": "high"
+  },
+  "691": {
+    "correct_index": 1,
+    "correct_text": "право користуватися",
+    "confidence": "high"
+  },
+  "692": {
+    "correct_index": 2,
+    "correct_text": "вони є чинними у частині, що не суперечить Конституції України",
+    "confidence": "high"
+  },
+  "693": {
+    "correct_index": 0,
+    "correct_text": "Актом проголошення незалежності України",
+    "confidence": "high"
+  },
+  "694": {
+    "correct_index": 1,
+    "correct_text": "громадяни України всіх національностей",
+    "confidence": "high"
+  },
+  "695": {
+    "correct_index": 1,
+    "correct_text": "День Конституції України",
+    "confidence": "high"
+  },
+  "696": {
+    "correct_index": 2,
+    "correct_text": "40 років",
+    "confidence": "high"
+  },
+  "697": {
+    "correct_index": 2,
+    "correct_text": "30 років",
+    "confidence": "high"
+  },
+  "698": {
+    "correct_index": 3,
+    "correct_text": "мов міжнародного спілкування",
+    "confidence": "high"
+  },
+  "699": {
+    "correct_index": 0,
+    "correct_text": "наданням жінкам рівних з чоловіками можливостей у громадсько-політичній і культурній діяльності",
+    "confidence": "high"
+  },
+  "700": {
+    "correct_index": 1,
+    "correct_text": "для здійснення і захисту своїх прав і свобод та задоволення політичних, економічних, соціальних, культурних та інших інтересів",
+    "confidence": "high"
+  },
+  "701": {
+    "correct_index": 2,
+    "correct_text": "до державної служби і служби в органах місцевого самоврядування",
+    "confidence": "high"
+  },
+  "702": {
+    "correct_index": 0,
+    "correct_text": "на вільній згоді жінки і чоловіка",
+    "confidence": "high"
+  },
+  "703": {
+    "correct_index": 1,
+    "correct_text": "місцеві державні адміністрації",
+    "confidence": "high"
+  },
+  "704": {
+    "correct_index": 2,
+    "correct_text": "Президент України за поданням Кабінету Міністрів України",
+    "confidence": "high"
+  },
+  "705": {
+    "correct_index": 1,
+    "correct_text": "так, повнолітні діти зобов’язані піклуватися про своїх непрацездатних батьків",
+    "confidence": "high"
+  },
+  "706": {
+    "correct_index": 3,
+    "correct_text": "сім’я, дитинство, материнство, батьківство",
+    "confidence": "high"
+  },
+  "707": {
+    "correct_index": 2,
+    "correct_text": "ні, за винятками, встановленими законом",
+    "confidence": "high"
+  },
+  "708": {
+    "correct_index": 2,
+    "correct_text": "тих, що становлять культурну цінність",
+    "confidence": "high"
+  },
+  "709": {
+    "correct_index": 3,
+    "correct_text": "Президент України здійснює керівництво у сферах національної безпеки та оборони через очолювану ним Раду національної безпеки і оборони України та призначає на посади і звільняє з посад вище командування Збройних Сил України",
+    "confidence": "medium"
+  },
+  "710": {
+    "correct_index": 3,
+    "correct_text": "до Верховної Ради України Президентом України або не менш як третиною народних депутатів України від конституційного складу Верховної Ради України",
+    "confidence": "high"
+  },
+  "711": {
+    "correct_index": 2,
+    "correct_text": "з дня ухвалення рішення про неконституційність, якщо інше не встановлено самим рішенням",
+    "confidence": "high"
+  },
+  "712": {
+    "correct_index": 3,
+    "correct_text": "це право належить усім особам, які працюють",
+    "confidence": "high"
+  },
+  "713": {
+    "correct_index": 0,
+    "correct_text": "відставку всього складу Кабінету Міністрів України",
+    "confidence": "high"
+  },
+  "714": {
+    "correct_index": 3,
+    "correct_text": "держава не може визнати обов’язковою жодну ідеологію",
+    "confidence": "high"
+  },
+  "715": {
+    "correct_index": 2,
+    "correct_text": "так, збереження генофонду Українського народу є обов’язком держави",
+    "confidence": "high"
+  },
+  "716": {
+    "correct_index": 0,
+    "correct_text": "ні, цензуру заборонено",
+    "confidence": "high"
+  },
+  "717": {
+    "correct_index": 1,
+    "correct_text": "ні, ніхто не може бути примушений робити те, що не передбачено законодавством",
+    "confidence": "high"
+  },
+  "718": {
+    "correct_index": 2,
+    "correct_text": "Знак Княжої Держави Володимира Великого",
+    "confidence": "high"
+  },
+  "719": {
+    "correct_index": 3,
+    "correct_text": "не менш як двома третинами від конституційного складу Верховної Ради України",
+    "confidence": "high"
+  },
+  "720": {
+    "correct_index": 0,
+    "correct_text": "так, після використання всіх національних засобів правового захисту",
+    "confidence": "high"
+  },
+  "721": {
+    "correct_index": 2,
+    "correct_text": "до їх повноліття",
+    "confidence": "high"
+  },
+  "722": {
+    "correct_index": 0,
+    "correct_text": "громадяни зобов’язані подавати декларацію щорічно",
+    "confidence": "high"
+  },
+  "723": {
+    "correct_index": 1,
+    "correct_text": "на вимогу не менш як трьох мільйонів громадян України",
+    "confidence": "high"
+  },
+  "724": {
+    "correct_index": 1,
+    "correct_text": "в період шістдесяти днів з дня опублікування рішення про дострокове припинення повноважень Верховної Ради України",
+    "confidence": "high"
+  },
+  "725": {
+    "correct_index": 0,
+    "correct_text": "Конституцією та законами України",
+    "confidence": "high"
+  },
+  "726": {
+    "correct_index": 3,
+    "correct_text": "який має судимість за вчинення умисного злочину, якщо ця судимість не погашена і не знята",
+    "confidence": "high"
+  },
+  "727": {
+    "correct_index": 2,
+    "correct_text": "з моменту складення присяги народним депутатом України",
+    "confidence": "high"
+  },
+  "728": {
+    "correct_index": 1,
+    "correct_text": "найстарший за віком народний депутат України",
+    "confidence": "high"
+  },
+  "729": {
+    "correct_index": 0,
+    "correct_text": "за результатами виборів та на основі узгодження політичних позицій",
+    "confidence": "high"
+  },
+  "730": {
+    "correct_index": 1,
+    "correct_text": "Президента України або не менш як третини народних депутатів України від конституційного складу Верховної Ради України",
+    "confidence": "high"
+  },
+  "731": {
+    "correct_index": 1,
+    "correct_text": "більшістю від її конституційного складу",
+    "confidence": "high"
+  },
+  "732": {
+    "correct_index": 2,
+    "correct_text": "Президентові України, народним депутатам України та Кабінету Міністрів України",
+    "confidence": "high"
+  },
+  "733": {
+    "correct_index": 1,
+    "correct_text": "Уповноважений Верховної Ради України з прав людини",
+    "confidence": "high"
+  },
+  "734": {
+    "correct_index": 3,
+    "correct_text": "Голова Конституційного Суду України",
+    "confidence": "high"
+  },
+  "735": {
+    "correct_index": 2,
+    "correct_text": "обмежується законом",
+    "confidence": "high"
+  },
+  "736": {
+    "correct_index": 0,
+    "correct_text": "безпосередньо на підставі Конституції України",
+    "confidence": "high"
+  },
+  "737": {
+    "correct_index": 1,
+    "correct_text": "лише у випадках, передбачених Конституцією України",
+    "confidence": "high"
+  },
+  "738": {
+    "correct_index": 2,
+    "correct_text": "виконання військового обов’язку має бути замінене альтернативною (невійськовою) службою",
+    "confidence": "high"
+  },
+  "739": {
+    "correct_index": 3,
+    "correct_text": "ні, громадянин України не може бути виданий іншій державі",
+    "confidence": "high"
+  },
+  "740": {
+    "correct_index": 0,
+    "correct_text": "виключно за рішенням суду",
+    "confidence": "high"
+  },
+  "741": {
+    "correct_index": 1,
+    "correct_text": "захищається законом",
+    "confidence": "high"
+  },
+  "742": {
+    "correct_index": 3,
+    "correct_text": "ні, ніхто не може бути примушений до участі у страйку",
+    "confidence": "high"
+  },
+  "743": {
+    "correct_index": 2,
+    "correct_text": "так, лише на підставі закону",
+    "confidence": "high"
+  },
+  "744": {
+    "correct_index": 3,
+    "correct_text": "ні, будь-яке насильство над дитиною переслідується за законом",
+    "confidence": "high"
+  },
+  "745": {
+    "correct_index": 2,
+    "correct_text": "будь-якими засобами, не забороненими законом",
+    "confidence": "high"
+  },
+  "746": {
+    "correct_index": 0,
+    "correct_text": "ні, не можуть бути використані для обвинувачення",
+    "confidence": "high"
+  },
+  "747": {
+    "correct_index": 1,
+    "correct_text": "Верховною Радою України",
+    "confidence": "high"
+  },
+  "748": {
+    "correct_index": 2,
+    "correct_text": "виключно законами України",
+    "confidence": "medium"
+  },
+  "749": {
+    "correct_index": 2,
+    "correct_text": "забезпечення стабільності гривні",
+    "confidence": "high"
+  },
+  "750": {
+    "correct_index": 0,
+    "correct_text": "Прем’єр-міністр України, Міністр оборони України, Голова Служби безпеки України, Міністр внутрішніх справ України, Міністр закордонних справ України",
+    "confidence": "high"
+  },
+  "751": {
+    "correct_index": 2,
+    "correct_text": "за вчинення державної зради Президент України може бути усунений з поста Верховною Радою України в порядку імпічменту",
+    "confidence": "high"
+  },
+  "752": {
+    "correct_index": 0,
+    "correct_text": "один раз",
+    "confidence": "high"
+  },
+  "753": {
+    "correct_index": 3,
+    "correct_text": "всеукраїнським референдумом",
+    "confidence": "high"
+  },
+  "754": {
+    "correct_index": 0,
+    "correct_text": "Президент України",
+    "confidence": "high"
+  },
+  "755": {
+    "correct_index": 1,
+    "correct_text": "із зазначенням строку дії цих обмежень",
+    "confidence": "high"
+  },
+  "756": {
+    "correct_index": 0,
+    "correct_text": "громадянам",
+    "confidence": "high"
+  },
+  "757": {
+    "correct_index": 3,
+    "correct_text": "земля",
+    "confidence": "high"
+  },
+  "758": {
+    "correct_index": 1,
+    "correct_text": "з моменту затримання",
+    "confidence": "high"
+  },
+  "759": {
+    "correct_index": 3,
+    "correct_text": "для утворення профспілки попередній дозвіл не потрібен",
+    "confidence": "high"
+  },
+  "760": {
+    "correct_index": 3,
+    "correct_text": "від імені Верховної Ради України",
+    "confidence": "high"
+  },
+  "761": {
+    "correct_index": 1,
+    "correct_text": "шляхом таємного голосування Пленумом Верховного Суду",
+    "confidence": "high"
+  },
+  "762": {
+    "correct_index": 2,
+    "correct_text": "з двадцяти одного",
+    "confidence": "high"
+  },
+  "763": {
+    "correct_index": 2,
+    "correct_text": "ні, але законом можуть бути передбачені додаткові вимоги для призначення на посаду судді",
+    "confidence": "high"
+  },
+  "764": {
+    "correct_index": 0,
+    "correct_text": "Прем’єр-міністр України, Перший віце-прем’єр-міністр, віце-прем’єр-міністри, міністри",
+    "confidence": "high"
+  },
+  "765": {
+    "correct_index": 2,
+    "correct_text": "так, але лише після внесення відповідних змін до Конституції України",
+    "confidence": "high"
+  },
+  "766": {
+    "correct_index": 2,
+    "correct_text": "указами Президента України",
+    "confidence": "high"
+  },
+  "767": {
+    "correct_index": 2,
+    "correct_text": "благодійницьку діяльність щодо дітей",
+    "confidence": "high"
+  },
+  "768": {
+    "correct_index": 3,
+    "correct_text": "усно, письмово або в інший спосіб — на свій вибір",
+    "confidence": "high"
+  },
+  "769": {
+    "correct_index": 2,
+    "correct_text": "до відповідних органів міжнародних організацій, членом або учасником яких є Україна",
+    "confidence": "high"
+  },
+  "770": {
+    "correct_index": 2,
+    "correct_text": "такий закон чи нормативно-правовий акт є нечинним",
+    "confidence": "high"
+  },
+  "771": {
+    "correct_index": 1,
+    "correct_text": "Верховна Рада України",
+    "confidence": "high"
+  },
+  "772": {
+    "correct_index": 0,
+    "correct_text": "Верховної Ради України",
+    "confidence": "high"
+  },
+  "773": {
+    "correct_index": 0,
+    "correct_text": "Президент України",
+    "confidence": "high"
+  },
+  "774": {
+    "correct_index": 0,
+    "correct_text": "Президент України",
+    "confidence": "high"
+  },
+  "775": {
+    "correct_index": 1,
+    "correct_text": "Президент України",
+    "confidence": "high"
+  },
+  "776": {
+    "correct_index": 3,
+    "correct_text": "Президент України",
+    "confidence": "high"
+  },
+  "777": {
+    "correct_index": 2,
+    "correct_text": "з моменту проголошення ним особисто заяви про відставку на засіданні Верховної Ради України",
+    "confidence": "high"
+  },
+  "778": {
+    "correct_index": 1,
+    "correct_text": "скасувати акти Ради міністрів Автономної Республіки Крим",
+    "confidence": "high"
+  },
+  "779": {
+    "correct_index": 3,
+    "correct_text": "Конституцією, законами України, указами Президента України та постановами Верховної Ради України",
+    "confidence": "high"
+  },
+  "780": {
+    "correct_index": 3,
+    "correct_text": "родичів заарештованого чи затриманого",
+    "confidence": "high"
+  },
+  "781": {
+    "correct_index": 1,
+    "correct_text": "якщо за це проголосувала не менш як одна третина від конституційного складу Верховної Ради України",
+    "confidence": "high"
+  },
+  "782": {
+    "correct_index": 1,
+    "correct_text": "ні, громадянин України не може бути позбавлений права змінити громадянство",
+    "confidence": "high"
+  },
+  "783": {
+    "correct_index": 3,
+    "correct_text": "так, лише за її вільною згодою",
+    "confidence": "high"
+  },
+  "784": {
+    "correct_index": 1,
+    "correct_text": "лише за вмотивованим рішенням суду і тільки на підставах та в порядку, встановлених законом",
+    "confidence": "high"
+  },
+  "785": {
+    "correct_index": 1,
+    "correct_text": "судом протягом сімдесяти двох годин з моменту затримання",
+    "confidence": "high"
+  },
+  "786": {
+    "correct_index": 2,
+    "correct_text": "так, але лише у випадках, пов’язаних із врятуванням життя людей та майна чи з безпосереднім переслідуванням осіб, які підозрюються у вчиненні злочину",
+    "confidence": "high"
+  },
+  "787": {
+    "correct_index": 1,
+    "correct_text": "так, якщо ці відомості не є державною або іншою захищеною законом таємницею",
+    "confidence": "high"
+  },
+  "788": {
+    "correct_index": 0,
+    "correct_text": "ні, громадянин України не може бути позбавлений права в будь-який час повернутися в Україну",
+    "confidence": "high"
+  },
+  "789": {
+    "correct_index": 0,
+    "correct_text": "свободу сповідувати будь-яку релігію або не сповідувати ніякої, безперешкодно відправляти одноособово чи колективно релігійні культи і ритуальні обряди, вести релігійну діяльність",
+    "confidence": "high"
+  }
+}

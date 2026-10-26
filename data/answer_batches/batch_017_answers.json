@@ -1,0 +1,502 @@
+{
+  "3039": {
+    "correct_index": 1,
+    "correct_text": "яке карається позбавленням волі",
+    "confidence": "high"
+  },
+  "3040": {
+    "correct_index": 0,
+    "correct_text": "слідчому",
+    "confidence": "high"
+  },
+  "3041": {
+    "correct_index": 1,
+    "correct_text": "шести місяців",
+    "confidence": "high"
+  },
+  "3042": {
+    "correct_index": 1,
+    "correct_text": "прокурора",
+    "confidence": "high"
+  },
+  "3048": {
+    "correct_index": 2,
+    "correct_text": "прокурора",
+    "confidence": "high"
+  },
+  "3051": {
+    "correct_index": 3,
+    "correct_text": "негайно після одержання клопотання",
+    "confidence": "high"
+  },
+  "3052": {
+    "correct_index": 1,
+    "correct_text": "прокурора",
+    "confidence": "high"
+  },
+  "3056": {
+    "correct_index": 2,
+    "correct_text": "потерпілий",
+    "confidence": "high"
+  },
+  "3061": {
+    "correct_index": 0,
+    "correct_text": "застосування запобіжного заходу у вигляді застави із покладенням на підозрюваного визначених судом обов’язків",
+    "confidence": "high"
+  },
+  "3062": {
+    "correct_index": 1,
+    "correct_text": "Міністерством внутрішніх справ України",
+    "confidence": "high"
+  },
+  "3063": {
+    "correct_index": 1,
+    "correct_text": "з моменту взяття під варту, а якщо взяттю під варту передувало затримання підозрюваного, обвинуваченого, - з моменту затримання",
+    "confidence": "high"
+  },
+  "3070": {
+    "correct_index": 3,
+    "correct_text": "за п’ять днів до закінчення дії попередньої ухвали про тримання під вартою",
+    "confidence": "high"
+  },
+  "3071": {
+    "correct_index": 0,
+    "correct_text": "місцевого суду, в межах територіальної юрисдикції якого здійснюється досудове розслідування",
+    "confidence": "high"
+  },
+  "3074": {
+    "correct_index": 0,
+    "correct_text": "за три години до початку розгляду клопотання",
+    "confidence": "high"
+  },
+  "3078": {
+    "correct_index": 2,
+    "correct_text": "раніше 30 днів з дня постановлення попередньої ухвали про застосування, зміну або відмову у зміні запобіжного заходу",
+    "confidence": "high"
+  },
+  "3083": {
+    "correct_index": 3,
+    "correct_text": "внесення відомостей до Єдиного реєстру досудових розслідувань",
+    "confidence": "high"
+  },
+  "3090": {
+    "correct_index": 0,
+    "correct_text": "момент, коли особа через підкорення наказу змушена залишатися поряд із уповноваженою службовою особою",
+    "confidence": "high"
+  },
+  "3093": {
+    "correct_index": 0,
+    "correct_text": "ста двадцяти годин",
+    "confidence": "low"
+  },
+  "3099": {
+    "correct_index": 3,
+    "correct_text": "Міністерство юстиції України",
+    "confidence": "high"
+  },
+  "3110": {
+    "correct_index": 2,
+    "correct_text": "протягом п’яти робочих днів з дня внесення таких відомостей з дотриманням правил підслідності передати наявні у нього матеріали до відповідного органу досудового розслідування та доручити проведення досудового розслідування",
+    "confidence": "high"
+  },
+  "3111": {
+    "correct_index": 3,
+    "correct_text": "слідчі органів Державного бюро розслідувань",
+    "confidence": "high"
+  },
+  "3113": {
+    "correct_index": 0,
+    "correct_text": "кримінального проступку та щодо злочину",
+    "confidence": "high"
+  },
+  "3118": {
+    "correct_index": 3,
+    "correct_text": "місце вчинення кримінального правопорушення",
+    "confidence": "high"
+  },
+  "3120": {
+    "correct_index": 2,
+    "correct_text": "Генеральний прокурор або заступник Генерального прокурора - керівник Спеціалізованої антикорупційної прокуратури",
+    "confidence": "high"
+  },
+  "3126": {
+    "correct_index": 2,
+    "correct_text": "виноситься вмотивована постанова",
+    "confidence": "high"
+  },
+  "3128": {
+    "correct_index": 3,
+    "correct_text": "слідчий, прокурор",
+    "confidence": "high"
+  },
+  "3138": {
+    "correct_index": 2,
+    "correct_text": "допит свідка під час досудового розслідування в судовому засіданні",
+    "confidence": "high"
+  },
+  "3142": {
+    "correct_index": 0,
+    "correct_text": "повідомляється про результати впізнання",
+    "confidence": "high"
+  },
+  "3143": {
+    "correct_index": 0,
+    "correct_text": "не вносяться до протоколу і зберігаються окремо",
+    "confidence": "high"
+  },
+  "3144": {
+    "correct_index": 2,
+    "correct_text": "чотирьох осіб",
+    "confidence": "high"
+  },
+  "3146": {
+    "correct_index": 3,
+    "correct_text": "допускається, якщо інших однорідних речей не існує",
+    "confidence": "high"
+  },
+  "3150": {
+    "correct_index": 3,
+    "correct_text": "місцевого загального суду, в межах територіальної юрисдикції якого знаходиться орган досудового розслідування, а у кримінальних провадженнях щодо злочинів, віднесених до підсудності Вищого антикорупційного суду, - на підставі ухвали слідчого судді Вищого антикорупційного суду",
+    "confidence": "high"
+  },
+  "3151": {
+    "correct_index": 2,
+    "correct_text": "згоду слідчого на участь у проведенні обшуку",
+    "confidence": "high"
+  },
+  "3154": {
+    "correct_index": 2,
+    "correct_text": "не доведено, що відомості, які містяться у відшукуваних речах і документах, можуть бути доказами під час судового розгляду",
+    "confidence": "high"
+  },
+  "3155": {
+    "correct_index": 0,
+    "correct_text": "лише один раз",
+    "confidence": "high"
+  },
+  "3156": {
+    "correct_index": 3,
+    "correct_text": "один місяць",
+    "confidence": "high"
+  },
+  "3157": {
+    "correct_index": 2,
+    "correct_text": "зобов’язані допустити до обшуку захисника або адвоката  на будь-якому етапі",
+    "confidence": "high"
+  },
+  "3160": {
+    "correct_index": 0,
+    "correct_text": "лише за добровільної згоди особи, яка ними володіє, або на підставі ухвали слідчого судді",
+    "confidence": "high"
+  },
+  "3162": {
+    "correct_index": 3,
+    "correct_text": "підозрюваного, свідка чи потерпілого",
+    "confidence": "high"
+  },
+  "3164": {
+    "correct_index": 3,
+    "correct_text": "освідування проводиться примусово",
+    "confidence": "high"
+  },
+  "3165": {
+    "correct_index": 0,
+    "correct_text": "суду під час судового розгляду",
+    "confidence": "high"
+  },
+  "3168": {
+    "correct_index": 3,
+    "correct_text": "за ухвалою слідчого судді або суду",
+    "confidence": "high"
+  },
+  "3170": {
+    "correct_index": 1,
+    "correct_text": "це різновид слідчих (розшукових) дій",
+    "confidence": "high"
+  },
+  "3171": {
+    "correct_index": 3,
+    "correct_text": "установлення місцезнаходження радіообладнання (радіоелектронного засобу)",
+    "confidence": "high"
+  },
+  "3172": {
+    "correct_index": 1,
+    "correct_text": "якщо відомості про кримінальне правопорушення та особу, яка його вчинила, неможливо отримати в інший спосіб",
+    "confidence": "high"
+  },
+  "3173": {
+    "correct_index": 1,
+    "correct_text": "про прийняття рішення щодо проведення певних негласних слідчих (розшукових) дій та отримані результати",
+    "confidence": "high"
+  },
+  "3176": {
+    "correct_index": 0,
+    "correct_text": "вісімнадцяти місяців",
+    "confidence": "high"
+  },
+  "3179": {
+    "correct_index": 3,
+    "correct_text": "слідчий, який здійснює досудове розслідування кримінального правопорушення, або за його дорученням - уповноважені оперативні підрозділи",
+    "confidence": "high"
+  },
+  "3182": {
+    "correct_index": 3,
+    "correct_text": "найменування кримінального провадження та його реєстраційний номер",
+    "confidence": "high"
+  },
+  "3190": {
+    "correct_index": 3,
+    "correct_text": "негайно припинено",
+    "confidence": "high"
+  },
+  "3195": {
+    "correct_index": 1,
+    "correct_text": "прокурор або за його дорученням слідчий",
+    "confidence": "high"
+  },
+  "3202": {
+    "correct_index": 0,
+    "correct_text": "свідків",
+    "confidence": "high"
+  },
+  "3205": {
+    "correct_index": 1,
+    "correct_text": "прокурора",
+    "confidence": "high"
+  },
+  "3206": {
+    "correct_index": 3,
+    "correct_text": "ухвали слідчого судді",
+    "confidence": "high"
+  },
+  "3210": {
+    "correct_index": 1,
+    "correct_text": "ухвали слідчого судді про накладення арешту на кореспонденцію",
+    "confidence": "high"
+  },
+  "3212": {
+    "correct_index": 1,
+    "correct_text": "представника цієї установи, а за необхідності - спеціаліста",
+    "confidence": "high"
+  },
+  "3216": {
+    "correct_index": 1,
+    "correct_text": "спеціаліста",
+    "confidence": "high"
+  },
+  "3222": {
+    "correct_index": 1,
+    "correct_text": "установлення місцезнаходження радіоелектронного засобу",
+    "confidence": "high"
+  },
+  "3229": {
+    "correct_index": 0,
+    "correct_text": "тяжкого або особливо тяжкого злочину",
+    "confidence": "high"
+  },
+  "3233": {
+    "correct_index": 2,
+    "correct_text": "слідчого судді",
+    "confidence": "high"
+  },
+  "3238": {
+    "correct_index": 2,
+    "correct_text": "таке повідомлення вручається у спосіб, передбачений Кримінальним процесуальним кодексом України для вручення повідомлень",
+    "confidence": "high"
+  },
+  "3240": {
+    "correct_index": 1,
+    "correct_text": "особа підлягає негайному звільненню",
+    "confidence": "high"
+  },
+  "3243": {
+    "correct_index": 2,
+    "correct_text": "після повідомлення особі про підозру",
+    "confidence": "high"
+  },
+  "3246": {
+    "correct_index": 3,
+    "correct_text": "тимчасово вилучене майно",
+    "confidence": "high"
+  },
+  "3247": {
+    "correct_index": 2,
+    "correct_text": "тягне за собою закриття кримінального провадження, крім випадків, передбачених Кримінальним процесуальним кодексом України",
+    "confidence": "high"
+  },
+  "3248": {
+    "correct_index": 3,
+    "correct_text": "з моменту подання позовної заяви органу досудового розслідування або суду",
+    "confidence": "high"
+  },
+  "3249": {
+    "correct_index": 0,
+    "correct_text": "затримання",
+    "confidence": "high"
+  },
+  "3251": {
+    "correct_index": 1,
+    "correct_text": "сторону, що їх подає",
+    "confidence": "high"
+  },
+  "3253": {
+    "correct_index": 3,
+    "correct_text": "зобов’язані допустити до обшуку адвоката або представника на будь-якому етапі обшуку",
+    "confidence": "high"
+  },
+  "3254": {
+    "correct_index": 1,
+    "correct_text": "не пізніше 5 днів з дня надходження матеріалів до суду",
+    "confidence": "high"
+  },
+  "3255": {
+    "correct_index": 1,
+    "correct_text": "зайняти будь-яке місце серед інших осіб, які пред’являються",
+    "confidence": "high"
+  },
+  "3256": {
+    "correct_index": 1,
+    "correct_text": "України",
+    "confidence": "high"
+  },
+  "3257": {
+    "correct_index": 0,
+    "correct_text": "заінтересованої особи",
+    "confidence": "high"
+  },
+  "3258": {
+    "correct_index": 3,
+    "correct_text": "показання, речові докази, документи, висновки експертів",
+    "confidence": "high"
+  },
+  "3259": {
+    "correct_index": 3,
+    "correct_text": "годинами, днями, місяцями",
+    "confidence": "high"
+  },
+  "3260": {
+    "correct_index": 1,
+    "correct_text": "проведення закритого судового засідання",
+    "confidence": "high"
+  },
+  "3261": {
+    "correct_index": 1,
+    "correct_text": "може бути укладена та затверджена лише з усіма потерпілими",
+    "confidence": "high"
+  },
+  "3262": {
+    "correct_index": 1,
+    "correct_text": "досудове розслідування та судове провадження проводяться в повному обсязі в загальному порядку",
+    "confidence": "high"
+  },
+  "3263": {
+    "correct_index": 2,
+    "correct_text": "якщо злочин вчинено із застосуванням насильства або погрозою його застосування",
+    "confidence": "high"
+  },
+  "3264": {
+    "correct_index": 0,
+    "correct_text": "цю дію проводять без участі понятих, оскільки їх участь під час предʼявлення для впізнання у судовому розгляді Кримінальним процесуальним кодексом України не передбачена",
+    "confidence": "high"
+  },
+  "3266": {
+    "correct_index": 2,
+    "correct_text": "відмовити у задоволенні клопотання, оскільки закриття кримінального провадження у цій категорії кримінальних правопорушень не передбачене  Кримінальним процесуальним кодексом України",
+    "confidence": "high"
+  },
+  "3267": {
+    "correct_index": 0,
+    "correct_text": "має право відмовитися від захисника або замінити його",
+    "confidence": "high"
+  },
+  "3268": {
+    "correct_index": 1,
+    "correct_text": "з моменту передачі обвинувального акту щодо неї до суду",
+    "confidence": "high"
+  },
+  "3269": {
+    "correct_index": 1,
+    "correct_text": "іншим суддею цього ж суду",
+    "confidence": "high"
+  },
+  "3270": {
+    "correct_index": 3,
+    "correct_text": "щодо фактів, які вона сприймала особисто, крім випадків, передбачених Кримінальним процесуальним кодексом України",
+    "confidence": "high"
+  },
+  "3275": {
+    "correct_index": 1,
+    "correct_text": "ухвалення обвинувального вироку без призначення покарання",
+    "confidence": "high"
+  },
+  "3276": {
+    "correct_index": 0,
+    "correct_text": "так, має право з урахуванням особи та обставин, встановлених під час кримінального провадження",
+    "confidence": "high"
+  },
+  "3279": {
+    "correct_index": 1,
+    "correct_text": "незалежно від набрання рішенням законної сили",
+    "confidence": "high"
+  },
+  "3285": {
+    "correct_index": 0,
+    "correct_text": "за заявою будь-якої особи",
+    "confidence": "low"
+  },
+  "3286": {
+    "correct_index": 0,
+    "correct_text": "за заявою учасника судового провадження чи органу виконання судового рішення, приватного виконавця",
+    "confidence": "high"
+  },
+  "3300": {
+    "correct_index": 3,
+    "correct_text": "Єдиною судовою інформаційно-комунікаційною системою",
+    "confidence": "high"
+  },
+  "3301": {
+    "correct_index": 1,
+    "correct_text": "за п’ять днів до судового засідання",
+    "confidence": "high"
+  },
+  "3312": {
+    "correct_index": 0,
+    "correct_text": "двох місяців, але не пізніше закриття прокурором кримінального провадження або звернення до суду із обвинувальним актом",
+    "confidence": "high"
+  },
+  "3314": {
+    "correct_index": 0,
+    "correct_text": "близьким родичам присяжного",
+    "confidence": "high"
+  },
+  "3319": {
+    "correct_index": 2,
+    "correct_text": "розпочинається з початку",
+    "confidence": "high"
+  },
+  "3325": {
+    "correct_index": 1,
+    "correct_text": "через суд, який ухвалив судове рішення",
+    "confidence": "high"
+  },
+  "3334": {
+    "correct_index": 2,
+    "correct_text": "відомостей про прокурора, який затвердив обвинувальний акт та підтримував обвинувачення у суді першої інстанції",
+    "confidence": "high"
+  },
+  "3338": {
+    "correct_index": 1,
+    "correct_text": "обвинуваченого, який перебуває під домашнім арештом",
+    "confidence": "high"
+  },
+  "3345": {
+    "correct_index": 2,
+    "correct_text": "зупиняє набрання законної сили та його виконання",
+    "confidence": "high"
+  },
+  "3346": {
+    "correct_index": 3,
+    "correct_text": "зупиняє набрання нею законної сили, але не зупиняє її виконання",
+    "confidence": "high"
+  }
+}

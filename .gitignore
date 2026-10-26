@@ -1,0 +1,10 @@
+# Heavy scraped HTML (regenerate via scripts/fetch_testderz.py)
+data/testderz_raw/
+
+# Temp matcher/helper junk from answer batching sessions
+data/answer_batches/_*
+scripts/_*
+
+# IDE
+.idea/
+*.iml
