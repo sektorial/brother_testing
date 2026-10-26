@@ -1,13 +1,14 @@
 # Статус проєкту (handoff)
 
-**Оновлено:** 2026-10-27 (~00:25 Europe/Kyiv)  
+**Оновлено:** 2026-10-27 (~00:42 Europe/Kyiv)  
+**Версія застосунку:** `1.0.0` (`VERSION`, `assets/version.js`, показ у UI)  
 **Мета:** HTML-тренажер тестів для iPhone (Safari), GitHub Pages, згідно з `requirements.md`.
 
 ---
 
 ## Де зупинилися
 
-Ключ, пули й UI готові. Репозиторій **публічний**; Firebase не потрібен. Залишилось **увімкнути GitHub Pages** (Build from branch `master` / `/`).
+Продакшн на GitHub Pages. Наступні зміни — бамп `VERSION` + `CHANGELOG.md` + `?v=` у `index.html`.
 
 | Етап | Статус |
 |------|--------|
@@ -15,9 +16,9 @@
 | Парсинг Excel → JSON | ✅ |
 | Ключ відповідей | ✅ **3972 / 3972** |
 | 40 пулів (стратегія B) | ✅ `data/pools.json` |
-| HTML-тренажер | ✅ вибір + кнопка «Підтвердити», упевненість, мітки, помилки |
-| Тести | ✅ `pytest tests` (8 passed) |
-| GitHub Pages | 🔄 репо public; увімкнути Pages → `https://sektorial.github.io/brother_testing/` |
+| HTML-тренажер | ✅ v1.0.0 |
+| Тести | ✅ `pytest tests` |
+| GitHub Pages | ✅ `https://sektorial.github.io/brother_testing/` |
 
 ---
 

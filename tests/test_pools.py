@@ -104,6 +104,17 @@ def test_ui_has_confirm_button():
     assert "quiz-logic.js" in html
 
 
+def test_version_files_aligned():
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    assert version == "1.0.0"
+    ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
+    assert f'APP_VERSION = "{version}"' in ver_js
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    assert f"assets/app.js?v={version}" in html
+    assert 'id="app-version"' in html
+    assert (ROOT / "CHANGELOG.md").exists()
+
+
 def test_ui_has_clear_marks_controls():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     assert 'id="btn-clear-marks"' in html

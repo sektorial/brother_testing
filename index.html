@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Тренажер тестів</title>
-  <link rel="stylesheet" href="assets/app.css" />
+  <link rel="stylesheet" href="assets/app.css?v=1.0.0" />
 </head>
 <body>
   <div id="app">
@@ -34,6 +34,7 @@
           <button type="button" id="btn-clear-marks" class="secondary danger-outline">Скинути всі мітки</button>
         </div>
       </section>
+      <p id="app-version" class="version" aria-label="Версія застосунку"></p>
     </main>
 
     <main id="screen-quiz" class="screen" hidden>
@@ -58,7 +59,8 @@
       </div>
     </main>
   </div>
-  <script src="assets/quiz-logic.js"></script>
-  <script src="assets/app.js"></script>
+  <script src="assets/version.js?v=1.0.0"></script>
+  <script src="assets/quiz-logic.js?v=1.0.0"></script>
+  <script src="assets/app.js?v=1.0.0"></script>
 </body>
 </html>

@@ -153,6 +153,14 @@ body {
   color: var(--danger) !important;
 }
 
+.version {
+  margin: 28px 0 8px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .meta-row {
   display: flex;
   align-items: center;

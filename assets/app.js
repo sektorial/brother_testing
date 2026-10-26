@@ -40,6 +40,7 @@
     toHome: document.getElementById("btn-to-home"),
     clearMarks: document.getElementById("btn-clear-marks"),
     clearAnswers: document.getElementById("btn-clear-answers"),
+    appVersion: document.getElementById("app-version"),
   };
 
   /** @type {{ pools: any[], bank: Record<string, any>, meta: any } | null} */
@@ -96,6 +97,9 @@
 
   function renderHome() {
     el.title.textContent = "Тренажер";
+    if (el.appVersion) {
+      el.appVersion.textContent = `Версія ${window.APP_VERSION || "?"}`;
+    }
     el.poolGrid.innerHTML = "";
     for (const pool of data.pools) {
       const stats = Q.poolAnswerStats(pool.question_ids, answers);
