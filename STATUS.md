@@ -1,63 +1,68 @@
 # Статус проєкту (handoff)
 
-**Оновлено:** 2026-10-27 (~00:16 Europe/Kyiv)  
+**Оновлено:** 2026-10-27 (~00:25 Europe/Kyiv)  
 **Мета:** HTML-тренажер тестів для iPhone (Safari), GitHub Pages, згідно з `requirements.md`.
 
 ---
 
 ## Де зупинилися
 
-Етап **відновлення правильних відповідей** — **закритий**. Усі батчі злиті в ключ. Далі: пули → HTML → GitHub Pages.
+Ключ і пули готові; **статичний тренажер зібраний** у корені репо. Залишилось **задеплоїти на GitHub Pages** (і за бажанням перевірити `confidence: low`).
 
 | Етап | Статус |
 |------|--------|
-| Вимоги (`requirements.md`) | ✅ закриті (функціональні TBD вирішені) |
+| Вимоги (`requirements.md`) | ✅ |
 | Парсинг Excel → JSON | ✅ |
-| Ключ з testderz (fuzzy match) | ✅ **1974** |
-| Добирання відповідей знаннями права (батчі) | ✅ **20/20** злито; `source: llm_batch` |
-| 40 пулів (стратегія B) | ❌ наступний крок |
-| HTML-тренажер | ❌ |
-| GitHub Pages | ❌ |
+| Ключ відповідей | ✅ **3972 / 3972** |
+| 40 пулів (стратегія B) | ✅ `data/pools.json` |
+| HTML-тренажер | ✅ `index.html` + `assets/` |
+| GitHub Pages | ❌ наступний крок |
 
 ---
 
 ## Поточні цифри
 
-- Усього питань: **3972**
-- У `data/answer_key.json`: **3972** (повне покриття)
-- У `data/questions.json`: **3972** з `correct_index` (`answer_status: matched`)
-- Батчі LLM: **1998** записів у 20 файлах (`000`–`019`; останній 98)
-- `confidence: low` у ключі після merge: **12** (варто вибірково перевірити)
+- Питань у ключі: **3972**
+- Пулів: **40** × 100 = **4000** слотів
+- У банку пулів: **3707** унікальних (невикористані надлишки ekpl/anticor/kpku)
+- Повтори між пулами: **293** (лише **ККУ**, max 2 використання)
+- `confidence: low` у ключі: **12**
 
-### Готові батчі відповідей
+### UI (готово)
 
-Усі `data/answer_batches/batch_*_answers.json`: `000`–`019` ✅  
-Валидатор: `scripts/validate_batch_answers.py`  
-Злиття: `scripts/merge_batch_answers.py` (уже виконано)
+- Вибір пулу 1–40
+- Подвійний тап: вибір → підтвердження → зелений/червоний
+- Показ **упевненості** після відповіді
+- Мітки ★ ⚑ ♥ ❗ у `localStorage`, фільтр за міткою
+- Підсумок + фіксована черга «робота над помилками» до закриття сесії
 
 ---
 
-## Що зробити в новій сесії (покроково)
+## Що зробити далі
 
-1. Згенерувати **40 пулів** стратегія **B**, пропорція **20/20/30/30**, +28 паддинг останнього питання за потреби.
-2. Зібрати **статичний HTML/JS** за `requirements.md` (мітки, подвійний тап, робота над помилками, `localStorage`).
-3. Задеплоїти на **GitHub Pages**.
-4. (Опційно) вибірково перевірити id з `confidence: low` у `answer_key.json`.
+1. Увімкнути **GitHub Pages** для `https://github.com/sektorial/brother_testing` (Source: Deploy from branch `master` / root `/`).
+2. Закомітити й запушити `pools.json`, `index.html`, `assets/`, `scripts/generate_pools.py`.
+3. Відкрити на iPhone Safari URL Pages і прогнати smoke-тест.
+4. (Опційно) перевірити 12 питань з `confidence: low`.
 
-Python для скриптів: `C:\Users\ivoln\anaconda3\envs\conda_env\python.exe` (див. skill `use-conda-env`).
+Локально: відкривати через будь-який static server (не `file://`), бо `fetch('data/pools.json')`.
+
+```powershell
+cd C:\Users\ivoln\IdeaProjects\brother_testing
+& "C:\Users\ivoln\anaconda3\envs\conda_env\python.exe" -m http.server 8080
+# http://127.0.0.1:8080/
+```
 
 ---
 
 ## Зафіксовані вимоги (коротко)
 
-Деталі — у `requirements.md`. Головне:
-
-- Пулів: **40**, стратегія **B** (повтори між пулами для дефіциту, насамперед ККУ)
-- Пропорція теми: **20 / 20 / 30 / 30** (ЄКПЛ / Антикор / ККУ / КПКУ)
-- Мітки: зірка / прапор / серце / оклик; **одна** на питання; можна **додати/зняти**; лише `localStorage`
-- UX відповіді: 1-й тап = вибір, 2-й = зелений/червоний, потім «далі»
-- Робота над помилками: черга **фіксована** з неправильних цієї сесії; тренувати скільки завгодно; після закриття сесії — зникає
-- UI лише українською; без таймера
+- Пулів: **40**, стратегія **B**, пропорція **20 / 20 / 30 / 30**
+- Після відповіді: **рівень упевненості** ключа
+- Мітки: одна на питання; add/remove; лише `localStorage`
+- UX: 1-й тап = вибір, 2-й = фіксація
+- Помилки: черга фіксована до кінця сесії
+- UI українською; без таймера
 
 ---
 
@@ -65,28 +70,11 @@ Python для скриптів: `C:\Users\ivoln\anaconda3\envs\conda_env\python.
 
 | Шлях | Призначення |
 |------|-------------|
-| `requirements.md` | Повна специфікація |
-| `STATUS.md` | Цей handoff |
-| `answer_key_notes.md` | Нотатки по ключу / testderz |
-| `questions_with_answers.xlsx` | Сире джерело (без позначки правильної відповіді) |
-| `questions_categories.md` | Діапазони тем |
-| `data/questions_raw.json` | 3972 питань з options |
-| `data/questions.json` | Те саме + `correct_index` |
-| `data/answer_key.json` | Ключ id → correct_index (повний) |
-| `data/testderz_answers.json` | Скрапнуті Q→A |
-| `data/testderz_raw/` | Сирий HTML (можна не комітити — важкий) |
-| `data/answer_batches/` | Батчі missing + `*_answers.json` |
-| `scripts/fetch_testderz.py` | Скрапінг testderz |
-| `scripts/match_answers.py` | Fuzzy match |
-| `scripts/merge_batch_answers.py` | Злиття LLM-батчів у ключ |
-| `scripts/validate_batch_answers.py` | Перевірка батчів перед merge |
-
----
-
-## Ризики / зауваги для наступної сесії
-
-- Відповіді з батчів — **не офіційний ключ іспиту**; є `confidence: low|medium|high`. Варто вибірково перевірити `low` (зараз 12 у ключі).
-- Match з testderz відфільтрований через узгодженість з options (щоб уникати «НЕ наділений» vs «наділений»).
-- Користувач пропонував також `wiki.nazk.gov.ua` / `rada.gov.ua` — для верифікації норм, не як готовий банк Q→A.
-- У `data/testderz_raw/` є сміттєві файли на кшталт `#comment-*.html` з раннього фетчу — можна ігнорувати/видалити.
-|
+| `index.html` | Оболонка тренажера |
+| `assets/app.js` / `app.css` | Логіка й стилі |
+| `data/pools.json` | 40 пулів + bank питань |
+| `data/answer_key.json` / `questions.json` | Повний ключ |
+| `scripts/generate_pools.py` | Генерація пулів |
+| `scripts/merge_batch_answers.py` | Злиття LLM-батчів |
+| `requirements.md` | Специфікація |
+| `STATUS.md` | Handoff |
