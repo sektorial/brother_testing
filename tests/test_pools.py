@@ -118,7 +118,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.3"
+    assert version == "1.0.4"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -149,6 +149,10 @@ def test_ui_has_clear_marks_controls():
     assert 'id="btn-clear-pool-answers-summary"' in html
     assert "Скинути відповіді пулу" in html
     assert "Скинути мітки пулу" in html
+    assert 'id="pool-live-stats"' in html
+    assert "<details" in html and "pool-reset" in html
+    logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
+    assert "formatPoolStatsHtml" in logic
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "clearAllMarks" in logic
     assert "clearMarksOfType" in logic

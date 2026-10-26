@@ -46,6 +46,9 @@
     confirmOk: document.getElementById("confirm-ok"),
     confirmCancel: document.getElementById("confirm-cancel"),
     poolReset: document.getElementById("pool-reset"),
+    poolResetSummary: document.getElementById("pool-reset-summary"),
+    poolLiveStats: document.getElementById("pool-live-stats"),
+    summaryPoolStats: document.getElementById("summary-pool-stats"),
     clearPoolAnswers: document.getElementById("btn-clear-pool-answers"),
     clearPoolMarks: document.getElementById("btn-clear-pool-marks"),
     clearPoolAnswersSummary: document.getElementById("btn-clear-pool-answers-summary"),
@@ -122,15 +125,14 @@
       if (stats.answered > 0) open.classList.add("has-progress");
       open.innerHTML =
         `<span>Пул ${pool.id}</span>` +
-        (stats.answered
-          ? `<span class="pool-sub">${stats.correct}/${stats.answered}</span>`
-          : `<span class="pool-sub">немає прогресу</span>`);
+        `<span class="pool-sub">${Q.formatPoolStatsHtml(stats)}</span>`;
+      open.title = `Пул ${pool.id}: неправильних ${stats.wrong}, надано ${stats.answered}, усього ${stats.total}`;
       open.addEventListener("click", () => startPool(pool.id));
 
       const clearAns = document.createElement("button");
       clearAns.type = "button";
       clearAns.className = "pool-clear-answers";
-      clearAns.textContent = "Відповіді";
+      clearAns.textContent = "↺ відп.";
       clearAns.title = `Скинути відповіді пулу ${pool.id}`;
       clearAns.disabled = stats.answered === 0;
       clearAns.addEventListener("click", (e) => {
@@ -142,7 +144,7 @@
       const clearMk = document.createElement("button");
       clearMk.type = "button";
       clearMk.className = "pool-clear-marks";
-      clearMk.textContent = "Мітки";
+      clearMk.textContent = "↺ мітки";
       clearMk.title = `Скинути мітки пулу ${pool.id}`;
       clearMk.disabled = markCount === 0;
       clearMk.addEventListener("click", (e) => {
@@ -260,22 +262,32 @@
   function syncPoolResetButtons() {
     const inPool = !!(session && session.mode === "pool" && session.poolId);
     const ids = currentPoolIds() || [];
-    const ansN = Q.poolAnswerStats(ids, answers).answered;
+    const stats = Q.poolAnswerStats(ids, answers);
     const markN = Q.countMarksForIds(marks, ids);
+    const statsHtml = Q.formatPoolStatsHtml(stats);
 
-    if (el.poolReset) el.poolReset.hidden = !inPool;
-    if (el.clearPoolAnswers) {
-      el.clearPoolAnswers.disabled = !inPool || ansN === 0;
+    if (el.poolLiveStats) {
+      el.poolLiveStats.hidden = !inPool;
+      if (inPool) el.poolLiveStats.innerHTML = statsHtml;
     }
-    if (el.clearPoolMarks) {
-      el.clearPoolMarks.disabled = !inPool || markN === 0;
+    if (el.summaryPoolStats) {
+      el.summaryPoolStats.hidden = !inPool;
+      if (inPool) el.summaryPoolStats.innerHTML = statsHtml;
     }
+    if (el.poolReset) {
+      el.poolReset.hidden = !inPool;
+      if (!inPool) el.poolReset.open = false;
+    }
+    if (el.poolResetSummary) {
+      el.poolResetSummary.hidden = !inPool;
+      if (!inPool) el.poolResetSummary.open = false;
+    }
+    if (el.clearPoolAnswers) el.clearPoolAnswers.disabled = !inPool || stats.answered === 0;
+    if (el.clearPoolMarks) el.clearPoolMarks.disabled = !inPool || markN === 0;
     if (el.clearPoolAnswersSummary) {
-      el.clearPoolAnswersSummary.hidden = !inPool;
-      el.clearPoolAnswersSummary.disabled = !inPool || ansN === 0;
+      el.clearPoolAnswersSummary.disabled = !inPool || stats.answered === 0;
     }
     if (el.clearPoolMarksSummary) {
-      el.clearPoolMarksSummary.hidden = !inPool;
       el.clearPoolMarksSummary.disabled = !inPool || markN === 0;
     }
   }

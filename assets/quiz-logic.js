@@ -109,7 +109,21 @@
       answered += 1;
       if (a.ok) correct += 1;
     }
-    return { answered, correct, total: questionIds.length };
+    const total = questionIds.length;
+    const wrong = Math.max(0, answered - correct);
+    return { answered, correct, wrong, total };
+  }
+
+  /** Icon strip: wrong / answered / total (for list + in-pool header). */
+  function formatPoolStatsHtml(stats) {
+    const wrong = stats.wrong != null ? stats.wrong : Math.max(0, stats.answered - stats.correct);
+    return (
+      `<span class="pool-stats" aria-label="Статистика пулу">` +
+      `<span class="stat stat-wrong" title="Неправильні відповіді"><span class="stat-ico" aria-hidden="true">✗</span>${wrong}</span>` +
+      `<span class="stat stat-answered" title="Надані відповіді"><span class="stat-ico" aria-hidden="true">✎</span>${stats.answered}</span>` +
+      `<span class="stat stat-total" title="Усього питань у пулі"><span class="stat-ico" aria-hidden="true">#</span>${stats.total}</span>` +
+      `</span>`
+    );
   }
 
   function getSavedAnswer(answers, questionId) {
@@ -294,6 +308,7 @@
     countCorrectAnswers,
     countMarksForIds,
     poolAnswerStats,
+    formatPoolStatsHtml,
     getSavedAnswer,
     reviewStateFromSaved,
     sessionStatsFromSaved,

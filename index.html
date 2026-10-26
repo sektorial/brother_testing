@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Тренажер тестів</title>
-  <link rel="stylesheet" href="assets/app.css?v=1.0.3" />
+  <link rel="stylesheet" href="assets/app.css?v=1.0.4" />
 </head>
 <body>
   <div id="app">
@@ -56,28 +56,38 @@
       <p id="q-text" class="q-text"></p>
       <div id="options" class="options"></div>
       <p id="confidence" class="confidence" hidden></p>
+      <div id="pool-live-stats" class="pool-live-stats" hidden></div>
       <button type="button" id="btn-confirm" class="primary" hidden>Підтвердити</button>
       <button type="button" id="btn-next" class="secondary" hidden>Далі</button>
-      <div id="pool-reset" class="pool-reset" hidden>
-        <button type="button" id="btn-clear-pool-answers" class="secondary danger-outline">Скинути відповіді пулу</button>
-        <button type="button" id="btn-clear-pool-marks" class="secondary danger-outline">Скинути мітки пулу</button>
-      </div>
+      <details id="pool-reset" class="pool-reset" hidden>
+        <summary>Скинути дані цього пулу…</summary>
+        <div class="pool-reset-body">
+          <button type="button" id="btn-clear-pool-answers" class="link-danger">Скинути відповіді пулу</button>
+          <button type="button" id="btn-clear-pool-marks" class="link-danger">Скинути мітки пулу</button>
+        </div>
+      </details>
     </main>
 
     <main id="screen-summary" class="screen" hidden>
       <h2>Результат</h2>
       <p id="summary-stats" class="summary-stats"></p>
+      <div id="summary-pool-stats" class="pool-live-stats" hidden></div>
       <div class="actions">
         <button type="button" id="btn-mistakes" class="primary" hidden>Пройти роботу над помилками</button>
         <button type="button" id="btn-again" class="secondary">Пройти пул знову</button>
-        <button type="button" id="btn-clear-pool-answers-summary" class="secondary danger-outline" hidden>Скинути відповіді пулу</button>
-        <button type="button" id="btn-clear-pool-marks-summary" class="secondary danger-outline" hidden>Скинути мітки пулу</button>
         <button type="button" id="btn-to-home" class="ghost">До меню</button>
       </div>
+      <details id="pool-reset-summary" class="pool-reset summary-reset" hidden>
+        <summary>Скинути дані цього пулу…</summary>
+        <div class="pool-reset-body">
+          <button type="button" id="btn-clear-pool-answers-summary" class="link-danger">Скинути відповіді пулу</button>
+          <button type="button" id="btn-clear-pool-marks-summary" class="link-danger">Скинути мітки пулу</button>
+        </div>
+      </details>
     </main>
   </div>
-  <script src="assets/version.js?v=1.0.3"></script>
-  <script src="assets/quiz-logic.js?v=1.0.3"></script>
-  <script src="assets/app.js?v=1.0.3"></script>
+  <script src="assets/version.js?v=1.0.4"></script>
+  <script src="assets/quiz-logic.js?v=1.0.4"></script>
+  <script src="assets/app.js?v=1.0.4"></script>
 </body>
 </html>

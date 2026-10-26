@@ -104,7 +104,17 @@ test("recordAnswer and clearAllAnswers", () => {
   assert.strictEqual(a["10"].ok, true);
   assert.strictEqual(a["11"].ok, false);
   const stats = Q.poolAnswerStats([10, 11, 12], a);
-  assert.deepStrictEqual(stats, { answered: 2, correct: 1, total: 3 });
+  assert.deepStrictEqual(stats, {
+    answered: 2,
+    correct: 1,
+    wrong: 1,
+    total: 3,
+  });
+  const html = Q.formatPoolStatsHtml(stats);
+  assert.ok(html.includes("stat-wrong"));
+  assert.ok(html.includes("stat-answered"));
+  assert.ok(html.includes("stat-total"));
+  assert.ok(html.includes(">1<") || html.includes("1</span>"));
   a = Q.clearAllAnswers();
   assert.strictEqual(Q.countAnswers(a), 0);
 });
