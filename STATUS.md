@@ -7,7 +7,7 @@
 
 ## Де зупинилися
 
-Ключ і пули готові; **статичний тренажер зібраний** у корені репо. Залишилось **задеплоїти на GitHub Pages** (і за бажанням перевірити `confidence: low`).
+Ключ, пули й UI готові. Репозиторій **публічний**; Firebase не потрібен. Залишилось **увімкнути GitHub Pages** (Build from branch `master` / `/`).
 
 | Етап | Статус |
 |------|--------|
@@ -15,8 +15,9 @@
 | Парсинг Excel → JSON | ✅ |
 | Ключ відповідей | ✅ **3972 / 3972** |
 | 40 пулів (стратегія B) | ✅ `data/pools.json` |
-| HTML-тренажер | ✅ `index.html` + `assets/` |
-| GitHub Pages | 🔄 код на `master` запушено; увімкнути Pages у Settings (branch `master` / root) |
+| HTML-тренажер | ✅ вибір + кнопка «Підтвердити», упевненість, мітки, помилки |
+| Тести | ✅ `pytest tests` (8 passed) |
+| GitHub Pages | 🔄 репо public; увімкнути Pages → `https://sektorial.github.io/brother_testing/` |
 
 ---
 
@@ -40,10 +41,12 @@
 
 ## Що зробити далі
 
-1. Увімкнути **GitHub Pages**: [Settings → Pages](https://github.com/sektorial/brother_testing/settings/pages) → Source: **Deploy from a branch** → `master` / `/` (root) → Save.  
-   Очікуваний URL: `https://sektorial.github.io/brother_testing/`
-2. Відкрити на iPhone Safari і прогнати smoke-тест (пул, відповідь, мітка, помилки).
+1. Увімкнути **GitHub Pages**: [Settings → Pages](https://github.com/sektorial/brother_testing/settings/pages) → **Deploy from a branch** → `master` / `/` (root) → **Save**.  
+   URL: `https://sektorial.github.io/brother_testing/`
+2. Smoke-тест на iPhone Safari (пул → варіант → «Підтвердити» → мітка → помилки).
 3. (Опційно) перевірити 12 питань з `confidence: low`.
+
+Примітка: для **приватного** репо Pages на безкоштовному плані недоступний; репо зроблено **public** — цього достатньо.
 
 Локально: відкривати через будь-який static server (не `file://`), бо `fetch('data/pools.json')`.
 

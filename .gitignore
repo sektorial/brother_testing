@@ -5,6 +5,8 @@ data/testderz_raw/
 data/answer_batches/_*
 scripts/_*
 
-# IDE
+# IDE / tests
 .idea/
 *.iml
+**/__pycache__/
+.pytest_cache/
