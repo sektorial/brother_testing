@@ -65,8 +65,35 @@
     return {};
   }
 
+  function clearAnswersForIds(answers, questionIds) {
+    const next = { ...(answers || {}) };
+    const idSet = new Set(questionIds.map(String));
+    for (const key of Object.keys(next)) {
+      if (idSet.has(key)) delete next[key];
+    }
+    return next;
+  }
+
+  function clearMarksForIds(marks, questionIds) {
+    const next = { ...(marks || {}) };
+    const idSet = new Set(questionIds.map(String));
+    for (const key of Object.keys(next)) {
+      if (idSet.has(key)) delete next[key];
+    }
+    return next;
+  }
+
   function countAnswers(answers) {
     return Object.keys(answers || {}).length;
+  }
+
+  function countMarksForIds(marks, questionIds) {
+    const idSet = new Set(questionIds.map(String));
+    let n = 0;
+    for (const key of Object.keys(marks || {})) {
+      if (idSet.has(key)) n += 1;
+    }
+    return n;
   }
 
   function countCorrectAnswers(answers) {
@@ -160,6 +187,40 @@
     });
   }
 
+  function requestClearPoolAnswers(answers, questionIds, poolLabel, confirmFn) {
+    const stats = poolAnswerStats(questionIds, answers);
+    if (!stats.answered) {
+      return { cleared: false, reason: "empty", answers };
+    }
+    const ok = confirmFn(
+      `Скинути збережені відповіді пулу ${poolLabel} (${stats.answered})?\n\nІнші пули не зміняться. Цю дію не можна скасувати.`
+    );
+    return Promise.resolve(ok).then((confirmed) => {
+      if (!confirmed) return { cleared: false, reason: "cancelled", answers };
+      return {
+        cleared: true,
+        reason: "ok",
+        answers: clearAnswersForIds(answers, questionIds),
+      };
+    });
+  }
+
+  function requestClearPoolMarks(marks, questionIds, poolLabel, confirmFn) {
+    const n = countMarksForIds(marks, questionIds);
+    if (!n) return { cleared: false, reason: "empty", marks };
+    const ok = confirmFn(
+      `Скинути мітки лише в пулі ${poolLabel} (${n})?\n\nМітки в інших пулах залишаться. Цю дію не можна скасувати.`
+    );
+    return Promise.resolve(ok).then((confirmed) => {
+      if (!confirmed) return { cleared: false, reason: "cancelled", marks };
+      return {
+        cleared: true,
+        reason: "ok",
+        marks: clearMarksForIds(marks, questionIds),
+      };
+    });
+  }
+
   function gradeAnswer(selectedIndex, correctIndex) {
     const ok = selectedIndex === correctIndex;
     return {
@@ -227,8 +288,11 @@
     totalMarks,
     recordAnswer,
     clearAllAnswers,
+    clearAnswersForIds,
+    clearMarksForIds,
     countAnswers,
     countCorrectAnswers,
+    countMarksForIds,
     poolAnswerStats,
     getSavedAnswer,
     reviewStateFromSaved,
@@ -236,6 +300,8 @@
     requestClearAllMarks,
     requestClearMarksOfType,
     requestClearAllAnswers,
+    requestClearPoolAnswers,
+    requestClearPoolMarks,
     gradeAnswer,
     buildMistakesQueue,
     validatePoolShape,

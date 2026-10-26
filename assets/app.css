@@ -72,12 +72,18 @@ body {
 .muted { color: var(--muted); font-size: 0.9rem; }
 
 .pool-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
-.pool-grid button {
-  min-height: calc(var(--tap) + 8px);
+.pool-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 6px;
+  align-items: stretch;
+}
+.pool-open {
+  min-height: calc(var(--tap) + 4px);
   border: 1px solid var(--line);
   background: var(--card);
   border-radius: 12px;
@@ -85,23 +91,50 @@ body {
   font-weight: 600;
   color: var(--text);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 6px 4px;
-  line-height: 1.1;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 14px;
+  text-align: left;
 }
-.pool-grid button .pool-sub {
-  font-size: 0.7rem;
+.pool-open .pool-sub {
+  font-size: 0.85rem;
   font-weight: 500;
   color: var(--muted);
 }
-.pool-grid button.has-progress {
+.pool-open.has-progress {
   border-color: #9ec9b8;
   background: var(--accent-soft);
 }
-.pool-grid button:active { filter: brightness(0.97); }
+.pool-open:active { filter: brightness(0.97); }
+.pool-clear-answers,
+.pool-clear-marks {
+  min-width: 72px;
+  min-height: calc(var(--tap) + 4px);
+  border: 1px solid #f0b4ae;
+  background: var(--card);
+  border-radius: 12px;
+  color: var(--danger);
+  font-size: 0.78rem;
+  line-height: 1.15;
+  padding: 4px 8px;
+  touch-action: manipulation;
+}
+.pool-clear-answers:disabled,
+.pool-clear-marks:disabled {
+  opacity: 0.4;
+  color: var(--muted);
+  border-color: var(--line);
+}
+.pool-reset {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pool-reset[hidden] {
+  display: none !important;
+}
 
 .mark-nav {
   display: flex;

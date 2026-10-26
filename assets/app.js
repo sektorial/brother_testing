@@ -45,6 +45,11 @@
     confirmMessage: document.getElementById("confirm-message"),
     confirmOk: document.getElementById("confirm-ok"),
     confirmCancel: document.getElementById("confirm-cancel"),
+    poolReset: document.getElementById("pool-reset"),
+    clearPoolAnswers: document.getElementById("btn-clear-pool-answers"),
+    clearPoolMarks: document.getElementById("btn-clear-pool-marks"),
+    clearPoolAnswersSummary: document.getElementById("btn-clear-pool-answers-summary"),
+    clearPoolMarksSummary: document.getElementById("btn-clear-pool-marks-summary"),
   };
 
   /** @type {{ pools: any[], bank: Record<string, any>, meta: any } | null} */
@@ -107,20 +112,49 @@
     el.poolGrid.innerHTML = "";
     for (const pool of data.pools) {
       const stats = Q.poolAnswerStats(pool.question_ids, answers);
-      const b = document.createElement("button");
-      b.type = "button";
-      if (stats.answered > 0) b.classList.add("has-progress");
-      b.innerHTML =
-        `<span>${pool.id}</span>` +
+      const markCount = Q.countMarksForIds(marks, pool.question_ids);
+      const row = document.createElement("div");
+      row.className = "pool-row";
+
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = "pool-open";
+      if (stats.answered > 0) open.classList.add("has-progress");
+      open.innerHTML =
+        `<span>Пул ${pool.id}</span>` +
         (stats.answered
           ? `<span class="pool-sub">${stats.correct}/${stats.answered}</span>`
-          : `<span class="pool-sub">—</span>`);
-      b.title =
-        stats.answered > 0
-          ? `Пул ${pool.id}: правильно ${stats.correct} з ${stats.answered} збережених відповідей`
-          : `Пул ${pool.id}`;
-      b.addEventListener("click", () => startPool(pool.id));
-      el.poolGrid.appendChild(b);
+          : `<span class="pool-sub">немає прогресу</span>`);
+      open.addEventListener("click", () => startPool(pool.id));
+
+      const clearAns = document.createElement("button");
+      clearAns.type = "button";
+      clearAns.className = "pool-clear-answers";
+      clearAns.textContent = "Відповіді";
+      clearAns.title = `Скинути відповіді пулу ${pool.id}`;
+      clearAns.disabled = stats.answered === 0;
+      clearAns.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearPoolAnswersById(pool.id);
+      });
+
+      const clearMk = document.createElement("button");
+      clearMk.type = "button";
+      clearMk.className = "pool-clear-marks";
+      clearMk.textContent = "Мітки";
+      clearMk.title = `Скинути мітки пулу ${pool.id}`;
+      clearMk.disabled = markCount === 0;
+      clearMk.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearPoolMarksById(pool.id);
+      });
+
+      row.appendChild(open);
+      row.appendChild(clearAns);
+      row.appendChild(clearMk);
+      el.poolGrid.appendChild(row);
     }
     el.markNav.innerHTML = "";
     for (const m of MARKS) {
@@ -215,6 +249,92 @@
     answers = result.answers;
     saveAnswers();
     renderHome();
+  }
+
+  function currentPoolIds() {
+    if (!session || !session.poolId || !data) return null;
+    const pool = data.pools.find((p) => p.id === session.poolId);
+    return pool ? pool.question_ids : null;
+  }
+
+  function syncPoolResetButtons() {
+    const inPool = !!(session && session.mode === "pool" && session.poolId);
+    const ids = currentPoolIds() || [];
+    const ansN = Q.poolAnswerStats(ids, answers).answered;
+    const markN = Q.countMarksForIds(marks, ids);
+
+    if (el.poolReset) el.poolReset.hidden = !inPool;
+    if (el.clearPoolAnswers) {
+      el.clearPoolAnswers.disabled = !inPool || ansN === 0;
+    }
+    if (el.clearPoolMarks) {
+      el.clearPoolMarks.disabled = !inPool || markN === 0;
+    }
+    if (el.clearPoolAnswersSummary) {
+      el.clearPoolAnswersSummary.hidden = !inPool;
+      el.clearPoolAnswersSummary.disabled = !inPool || ansN === 0;
+    }
+    if (el.clearPoolMarksSummary) {
+      el.clearPoolMarksSummary.hidden = !inPool;
+      el.clearPoolMarksSummary.disabled = !inPool || markN === 0;
+    }
+  }
+
+  async function clearPoolAnswersById(poolId) {
+    const pool = data.pools.find((p) => p.id === poolId);
+    if (!pool) return;
+    const result = await Q.requestClearPoolAnswers(
+      answers,
+      pool.question_ids,
+      String(poolId),
+      askConfirm
+    );
+    if (!result.cleared) return;
+    answers = result.answers;
+    saveAnswers();
+    if (session && session.poolId === poolId) {
+      const savedStats = Q.sessionStatsFromSaved(session.queue, answers);
+      session.correctCount = savedStats.correctCount;
+      session.wrongCount = savedStats.wrongCount;
+      session.wrongIds = savedStats.wrongIds.slice();
+      session.mistakesQueue = null;
+      if (!el.quiz.hidden) renderQuestion();
+      else if (!el.summary.hidden) finishSession();
+      else renderHome();
+    } else {
+      renderHome();
+    }
+  }
+
+  async function clearPoolMarksById(poolId) {
+    const pool = data.pools.find((p) => p.id === poolId);
+    if (!pool) return;
+    const result = await Q.requestClearPoolMarks(
+      marks,
+      pool.question_ids,
+      String(poolId),
+      askConfirm
+    );
+    if (!result.cleared) return;
+    marks = result.marks;
+    saveMarks();
+    if (session && session.poolId === poolId && !el.quiz.hidden) {
+      renderQuestion();
+    } else if (!el.home.hidden) {
+      renderHome();
+    } else {
+      syncPoolResetButtons();
+    }
+  }
+
+  async function clearCurrentPoolAnswers() {
+    if (!session || !session.poolId) return;
+    await clearPoolAnswersById(session.poolId);
+  }
+
+  async function clearCurrentPoolMarks() {
+    if (!session || !session.poolId) return;
+    await clearPoolMarksById(session.poolId);
   }
 
   function questionsFromIds(ids) {
@@ -360,6 +480,7 @@
       el.next.textContent =
         session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
     }
+    syncPoolResetButtons();
     show("quiz");
   }
 
@@ -436,6 +557,7 @@
     el.again.hidden = session.mode === "mistakes";
     el.again.textContent =
       session.mode === "marks" ? "Пройти мітки знову" : "Пройти пул знову";
+    syncPoolResetButtons();
     show("summary");
   }
 
@@ -450,6 +572,26 @@
     e.preventDefault();
     e.stopPropagation();
     clearAllSavedAnswers();
+  });
+  el.clearPoolAnswers.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearCurrentPoolAnswers();
+  });
+  el.clearPoolMarks.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearCurrentPoolMarks();
+  });
+  el.clearPoolAnswersSummary.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearCurrentPoolAnswers();
+  });
+  el.clearPoolMarksSummary.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearCurrentPoolMarks();
   });
   el.homeBtn.addEventListener("click", () => {
     session = null;

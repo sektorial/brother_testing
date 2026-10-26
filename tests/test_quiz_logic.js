@@ -167,6 +167,39 @@ async function runClearTests() {
     assert.strictEqual(result.cleared, false);
     assert.strictEqual(Q.countAnswers(result.answers), 1);
   });
+
+  await testAsync("requestClearPoolAnswers only clears pool ids", async () => {
+    let answers = Q.recordAnswer({}, 1, 0, 0, 1);
+    answers = Q.recordAnswer(answers, 2, 0, 0, 2);
+    answers = Q.recordAnswer(answers, 99, 1, 1, 3);
+    const result = await Q.requestClearPoolAnswers(
+      answers,
+      [1, 2],
+      "9",
+      () => true
+    );
+    assert.strictEqual(result.cleared, true);
+    assert.strictEqual(result.answers["99"].ok, true);
+    assert.strictEqual(result.answers["1"], undefined);
+    assert.strictEqual(result.answers["2"], undefined);
+  });
+
+  await testAsync("requestClearPoolMarks only clears pool ids", async () => {
+    const marks = { "1": "star", "2": "flag", "99": "heart" };
+    const result = await Q.requestClearPoolMarks(marks, [1, 2], "9", () => true);
+    assert.strictEqual(result.cleared, true);
+    assert.deepStrictEqual(result.marks, { "99": "heart" });
+  });
+
+  await testAsync("requestClearPoolAnswers empty skips confirm", async () => {
+    let called = false;
+    const result = await Q.requestClearPoolAnswers({}, [1, 2], "1", () => {
+      called = true;
+      return true;
+    });
+    assert.strictEqual(called, false);
+    assert.strictEqual(result.reason, "empty");
+  });
 }
 
 function testAsync(name, fn) {

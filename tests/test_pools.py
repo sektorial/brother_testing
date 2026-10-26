@@ -118,7 +118,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.2"
+    assert version == "1.0.3"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -144,13 +144,21 @@ def test_ui_has_clear_marks_controls():
     assert 'id="btn-clear-answers"' in html
     assert "Скинути збережені відповіді" in html
     assert 'id="confirm-modal"' in html
+    assert 'id="btn-clear-pool-answers"' in html
+    assert 'id="btn-clear-pool-marks"' in html
+    assert 'id="btn-clear-pool-answers-summary"' in html
+    assert "Скинути відповіді пулу" in html
+    assert "Скинути мітки пулу" in html
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "clearAllMarks" in logic
     assert "clearMarksOfType" in logic
     assert "recordAnswer" in logic
     assert "clearAllAnswers" in logic
     assert "requestClearAllAnswers" in logic
+    assert "requestClearPoolAnswers" in logic
+    assert "requestClearPoolMarks" in logic
     app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
     assert "brother_testing_answers_v1" in app
     assert "askConfirm" in app
     assert "clearAllSavedAnswers" in app
+    assert "clearPoolAnswersById" in app
