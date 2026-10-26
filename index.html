@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Тренажер тестів</title>
-  <link rel="stylesheet" href="assets/app.css?v=1.0.0" />
+  <link rel="stylesheet" href="assets/app.css?v=1.0.1" />
 </head>
 <body>
   <div id="app">
@@ -37,6 +37,17 @@
       <p id="app-version" class="version" aria-label="Версія застосунку"></p>
     </main>
 
+    <div id="confirm-modal" class="confirm-modal" hidden>
+      <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <p id="confirm-title" class="confirm-title">Підтвердження</p>
+        <p id="confirm-message" class="confirm-message"></p>
+        <div class="confirm-actions">
+          <button type="button" id="confirm-cancel" class="secondary">Скасувати</button>
+          <button type="button" id="confirm-ok" class="primary danger-fill">Так, скинути</button>
+        </div>
+      </div>
+    </div>
+
     <main id="screen-quiz" class="screen" hidden>
       <div class="meta-row">
         <span id="q-category" class="pill"></span>
@@ -59,8 +70,8 @@
       </div>
     </main>
   </div>
-  <script src="assets/version.js?v=1.0.0"></script>
-  <script src="assets/quiz-logic.js?v=1.0.0"></script>
-  <script src="assets/app.js?v=1.0.0"></script>
+  <script src="assets/version.js?v=1.0.1"></script>
+  <script src="assets/quiz-logic.js?v=1.0.1"></script>
+  <script src="assets/app.js?v=1.0.1"></script>
 </body>
 </html>

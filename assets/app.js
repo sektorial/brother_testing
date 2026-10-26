@@ -41,6 +41,10 @@
     clearMarks: document.getElementById("btn-clear-marks"),
     clearAnswers: document.getElementById("btn-clear-answers"),
     appVersion: document.getElementById("app-version"),
+    confirmModal: document.getElementById("confirm-modal"),
+    confirmMessage: document.getElementById("confirm-message"),
+    confirmOk: document.getElementById("confirm-ok"),
+    confirmCancel: document.getElementById("confirm-cancel"),
   };
 
   /** @type {{ pools: any[], bank: Record<string, any>, meta: any } | null} */
@@ -153,47 +157,62 @@
     show("home");
   }
 
-  function clearOneMarkType(meta) {
-    const n = Q.countMarks(marks, meta.id);
-    if (!n) return;
-    if (
-      !confirm(
-        `Скинути всі мітки «${meta.label}» (${n})?\n\nЦю дію не можна скасувати.`
-      )
-    ) {
-      return;
-    }
-    marks = Q.clearMarksOfType(marks, meta.id);
+  /** In-app confirm dialog (native browser confirm is unreliable on some iOS/Safari contexts). */
+  function askConfirm(message) {
+    return new Promise((resolve) => {
+      el.confirmMessage.textContent = message;
+      el.confirmModal.hidden = false;
+      const finish = (value) => {
+        el.confirmModal.hidden = true;
+        el.confirmOk.removeEventListener("click", onOk);
+        el.confirmCancel.removeEventListener("click", onCancel);
+        el.confirmModal.removeEventListener("click", onBackdrop);
+        resolve(value);
+      };
+      const onOk = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        finish(true);
+      };
+      const onCancel = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        finish(false);
+      };
+      const onBackdrop = (e) => {
+        if (e.target === el.confirmModal) finish(false);
+      };
+      el.confirmOk.addEventListener("click", onOk);
+      el.confirmCancel.addEventListener("click", onCancel);
+      el.confirmModal.addEventListener("click", onBackdrop);
+    });
+  }
+
+  async function clearOneMarkType(meta) {
+    const result = await Q.requestClearMarksOfType(
+      marks,
+      meta.id,
+      meta.label,
+      askConfirm
+    );
+    if (!result.cleared) return;
+    marks = result.marks;
     saveMarks();
     renderHome();
   }
 
-  function clearAllSavedMarks() {
-    const n = Q.totalMarks(marks);
-    if (!n) return;
-    if (
-      !confirm(
-        `Скинути ВСІ мітки (${n})?\n\nЦю дію не можна скасувати.`
-      )
-    ) {
-      return;
-    }
-    marks = Q.clearAllMarks();
+  async function clearAllSavedMarks() {
+    const result = await Q.requestClearAllMarks(marks, askConfirm);
+    if (!result.cleared) return;
+    marks = result.marks;
     saveMarks();
     renderHome();
   }
 
-  function clearAllSavedAnswers() {
-    const n = Q.countAnswers(answers);
-    if (!n) return;
-    if (
-      !confirm(
-        `Скинути всі збережені відповіді (${n})?\n\nПрогрес на пулах обнулиться. Цю дію не можна скасувати.`
-      )
-    ) {
-      return;
-    }
-    answers = Q.clearAllAnswers();
+  async function clearAllSavedAnswers() {
+    const result = await Q.requestClearAllAnswers(answers, askConfirm);
+    if (!result.cleared) return;
+    answers = result.answers;
     saveAnswers();
     renderHome();
   }
@@ -392,8 +411,16 @@
 
   el.confirm.addEventListener("click", confirmAnswer);
   el.next.addEventListener("click", goNext);
-  el.clearMarks.addEventListener("click", clearAllSavedMarks);
-  el.clearAnswers.addEventListener("click", clearAllSavedAnswers);
+  el.clearMarks.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearAllSavedMarks();
+  });
+  el.clearAnswers.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    clearAllSavedAnswers();
+  });
   el.homeBtn.addEventListener("click", () => {
     session = null;
     renderHome();

@@ -161,6 +161,62 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.confirm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 32, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.confirm-modal[hidden] {
+  display: none !important;
+}
+.confirm-card {
+  width: min(100%, 420px);
+  background: var(--card);
+  border-radius: 16px;
+  padding: 18px 16px 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+.confirm-title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.confirm-message {
+  margin: 0 0 16px;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  color: var(--text);
+}
+.confirm-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.confirm-actions .primary,
+.confirm-actions .secondary {
+  margin-top: 0;
+  width: 100%;
+}
+.danger-fill {
+  background: var(--danger) !important;
+}
+.reset-actions .secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.mark-clear-one,
+.reset-actions .secondary {
+  touch-action: manipulation;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+
 .meta-row {
   display: flex;
   align-items: center;

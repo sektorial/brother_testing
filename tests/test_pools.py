@@ -106,13 +106,23 @@ def test_ui_has_confirm_button():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.0"
+    assert version == "1.0.1"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     assert f"assets/app.js?v={version}" in html
     assert 'id="app-version"' in html
+    assert 'id="confirm-modal"' in html
     assert (ROOT / "CHANGELOG.md").exists()
+
+
+def test_ui_uses_in_app_confirm_not_window_confirm():
+    app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "function askConfirm" in app
+    assert "confirmModal" in app
+    assert "requestClearAllMarks" in app
+    assert "requestClearAllAnswers" in app
+    assert "window.confirm(" not in app
 
 
 def test_ui_has_clear_marks_controls():
@@ -121,12 +131,14 @@ def test_ui_has_clear_marks_controls():
     assert "Скинути всі мітки" in html
     assert 'id="btn-clear-answers"' in html
     assert "Скинути збережені відповіді" in html
+    assert 'id="confirm-modal"' in html
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "clearAllMarks" in logic
     assert "clearMarksOfType" in logic
     assert "recordAnswer" in logic
     assert "clearAllAnswers" in logic
+    assert "requestClearAllAnswers" in logic
     app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
     assert "brother_testing_answers_v1" in app
-    assert "confirm(" in app
+    assert "askConfirm" in app
     assert "clearAllSavedAnswers" in app

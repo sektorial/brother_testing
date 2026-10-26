@@ -85,6 +85,50 @@
     return { answered, correct, total: questionIds.length };
   }
 
+  /**
+   * Clear helpers with injectable confirm (for UI + tests).
+   * confirmFn(message) -> boolean | Promise<boolean>
+   */
+  function requestClearAllMarks(marks, confirmFn) {
+    const n = totalMarks(marks);
+    if (!n) return { cleared: false, reason: "empty", marks };
+    const ok = confirmFn(
+      `Скинути ВСІ мітки (${n})?\n\nЦю дію не можна скасувати.`
+    );
+    return Promise.resolve(ok).then((confirmed) => {
+      if (!confirmed) return { cleared: false, reason: "cancelled", marks };
+      return { cleared: true, reason: "ok", marks: clearAllMarks() };
+    });
+  }
+
+  function requestClearMarksOfType(marks, markId, label, confirmFn) {
+    const n = countMarks(marks, markId);
+    if (!n) return { cleared: false, reason: "empty", marks };
+    const ok = confirmFn(
+      `Скинути всі мітки «${label}» (${n})?\n\nЦю дію не можна скасувати.`
+    );
+    return Promise.resolve(ok).then((confirmed) => {
+      if (!confirmed) return { cleared: false, reason: "cancelled", marks };
+      return {
+        cleared: true,
+        reason: "ok",
+        marks: clearMarksOfType(marks, markId),
+      };
+    });
+  }
+
+  function requestClearAllAnswers(answers, confirmFn) {
+    const n = countAnswers(answers);
+    if (!n) return { cleared: false, reason: "empty", answers };
+    const ok = confirmFn(
+      `Скинути всі збережені відповіді (${n})?\n\nПрогрес на пулах обнулиться. Цю дію не можна скасувати.`
+    );
+    return Promise.resolve(ok).then((confirmed) => {
+      if (!confirmed) return { cleared: false, reason: "cancelled", answers };
+      return { cleared: true, reason: "ok", answers: clearAllAnswers() };
+    });
+  }
+
   function gradeAnswer(selectedIndex, correctIndex) {
     const ok = selectedIndex === correctIndex;
     return {
@@ -155,6 +199,9 @@
     countAnswers,
     countCorrectAnswers,
     poolAnswerStats,
+    requestClearAllMarks,
+    requestClearMarksOfType,
+    requestClearAllAnswers,
     gradeAnswer,
     buildMistakesQueue,
     validatePoolShape,

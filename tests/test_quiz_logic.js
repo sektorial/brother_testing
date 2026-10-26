@@ -93,4 +93,80 @@ test("recordAnswer and clearAllAnswers", () => {
   assert.strictEqual(Q.countAnswers(a), 0);
 });
 
-console.log("All quiz-logic tests passed.");
+async function runClearTests() {
+  await testAsync("requestClearAllMarks confirms and clears", async () => {
+    const marks = { "1": "star", "2": "flag" };
+    let asked = "";
+    const result = await Q.requestClearAllMarks(marks, (msg) => {
+      asked = msg;
+      return true;
+    });
+    assert.ok(asked.includes("ВСІ мітки"));
+    assert.strictEqual(result.cleared, true);
+    assert.deepStrictEqual(result.marks, {});
+  });
+
+  await testAsync("requestClearAllMarks cancel keeps data", async () => {
+    const marks = { "1": "star" };
+    const result = await Q.requestClearAllMarks(marks, () => false);
+    assert.strictEqual(result.cleared, false);
+    assert.strictEqual(result.reason, "cancelled");
+    assert.deepStrictEqual(result.marks, marks);
+  });
+
+  await testAsync("requestClearAllMarks empty skips confirm", async () => {
+    let called = false;
+    const result = await Q.requestClearAllMarks({}, () => {
+      called = true;
+      return true;
+    });
+    assert.strictEqual(called, false);
+    assert.strictEqual(result.reason, "empty");
+    assert.strictEqual(result.cleared, false);
+  });
+
+  await testAsync("requestClearMarksOfType only clears one kind", async () => {
+    const marks = { "1": "star", "2": "flag", "3": "star" };
+    const result = await Q.requestClearMarksOfType(
+      marks,
+      "star",
+      "Зірка",
+      () => true
+    );
+    assert.strictEqual(result.cleared, true);
+    assert.deepStrictEqual(result.marks, { "2": "flag" });
+  });
+
+  await testAsync("requestClearAllAnswers confirms and clears", async () => {
+    let answers = Q.recordAnswer({}, 5, 0, 0, 1);
+    answers = Q.recordAnswer(answers, 6, 1, 0, 2);
+    const result = await Q.requestClearAllAnswers(answers, () => true);
+    assert.strictEqual(result.cleared, true);
+    assert.deepStrictEqual(result.answers, {});
+  });
+
+  await testAsync("requestClearAllAnswers cancel keeps data", async () => {
+    const answers = Q.recordAnswer({}, 5, 0, 0, 1);
+    const result = await Q.requestClearAllAnswers(answers, () => false);
+    assert.strictEqual(result.cleared, false);
+    assert.strictEqual(Q.countAnswers(result.answers), 1);
+  });
+}
+
+function testAsync(name, fn) {
+  return fn()
+    .then(() => console.log("ok -", name))
+    .catch((err) => {
+      console.error("FAIL -", name);
+      throw err;
+    });
+}
+
+runClearTests()
+  .then(() => {
+    console.log("All quiz-logic tests passed.");
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
