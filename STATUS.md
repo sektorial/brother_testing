@@ -16,7 +16,7 @@
 | Ключ відповідей | ✅ **3972 / 3972** |
 | 40 пулів (стратегія B) | ✅ `data/pools.json` |
 | HTML-тренажер | ✅ `index.html` + `assets/` |
-| GitHub Pages | ❌ наступний крок |
+| GitHub Pages | 🔄 код на `master` запушено; увімкнути Pages у Settings (branch `master` / root) |
 
 ---
 
@@ -40,10 +40,10 @@
 
 ## Що зробити далі
 
-1. Увімкнути **GitHub Pages** для `https://github.com/sektorial/brother_testing` (Source: Deploy from branch `master` / root `/`).
-2. Закомітити й запушити `pools.json`, `index.html`, `assets/`, `scripts/generate_pools.py`.
-3. Відкрити на iPhone Safari URL Pages і прогнати smoke-тест.
-4. (Опційно) перевірити 12 питань з `confidence: low`.
+1. Увімкнути **GitHub Pages**: [Settings → Pages](https://github.com/sektorial/brother_testing/settings/pages) → Source: **Deploy from a branch** → `master` / `/` (root) → Save.  
+   Очікуваний URL: `https://sektorial.github.io/brother_testing/`
+2. Відкрити на iPhone Safari і прогнати smoke-тест (пул, відповідь, мітка, помилки).
+3. (Опційно) перевірити 12 питань з `confidence: low`.
 
 Локально: відкривати через будь-який static server (не `file://`), бо `fetch('data/pools.json')`.
 
@@ -53,6 +53,12 @@ cd C:\Users\ivoln\IdeaProjects\brother_testing
 # http://127.0.0.1:8080/
 ```
 
+Тести:
+
+```powershell
+& "C:\Users\ivoln\anaconda3\envs\conda_env\python.exe" -m pytest tests -v
+```
+
 ---
 
 ## Зафіксовані вимоги (коротко)
@@ -60,7 +66,7 @@ cd C:\Users\ivoln\IdeaProjects\brother_testing
 - Пулів: **40**, стратегія **B**, пропорція **20 / 20 / 30 / 30**
 - Після відповіді: **рівень упевненості** ключа
 - Мітки: одна на питання; add/remove; лише `localStorage`
-- UX: 1-й тап = вибір, 2-й = фіксація
+- UX: вибір варіанта + кнопка **«Підтвердити»** → фіксація
 - Помилки: черга фіксована до кінця сесії
 - UI українською; без таймера
 

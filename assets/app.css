@@ -191,6 +191,11 @@ body {
 .confidence.medium { background: var(--warn-soft); color: var(--warn); }
 .confidence.low { background: var(--danger-soft); color: var(--danger); }
 
+#btn-confirm[hidden],
+#btn-next[hidden] {
+  display: none !important;
+}
+
 .primary, .secondary, .ghost {
   min-height: var(--tap);
   border-radius: 12px;

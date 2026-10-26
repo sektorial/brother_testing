@@ -1,12 +1,8 @@
 (() => {
   "use strict";
 
-  const MARKS = [
-    { id: "star", label: "Зірка", icon: "★" },
-    { id: "flag", label: "Прапор", icon: "⚑" },
-    { id: "heart", label: "Серце", icon: "♥" },
-    { id: "bang", label: "Оклик", icon: "❗" },
-  ];
+  const Q = window.BrotherQuiz;
+  const MARKS = Q.MARKS;
   const CAT_UA = {
     ekpl: "ЄКПЛ",
     anticor: "Антикор",
@@ -34,6 +30,7 @@
     qText: document.getElementById("q-text"),
     options: document.getElementById("options"),
     confidence: document.getElementById("confidence"),
+    confirm: document.getElementById("btn-confirm"),
     next: document.getElementById("btn-next"),
     summaryStats: document.getElementById("summary-stats"),
     mistakes: document.getElementById("btn-mistakes"),
@@ -93,7 +90,7 @@
     }
     el.markNav.innerHTML = "";
     for (const m of MARKS) {
-      const count = Object.values(marks).filter((v) => v === m.id).length;
+      const count = Q.countMarks(marks, m.id);
       const b = document.createElement("button");
       b.type = "button";
       b.innerHTML = `<span>${m.icon} ${m.label}</span><span class="count">${count}</span>`;
@@ -105,11 +102,7 @@
   }
 
   function questionsFromIds(ids) {
-    return ids.map((id) => {
-      const q = data.bank[String(id)];
-      if (!q) throw new Error("missing question " + id);
-      return q;
-    });
+    return Q.buildMistakesQueue(ids, data.bank);
   }
 
   function startPool(poolId) {
@@ -168,7 +161,6 @@
       locked: false,
       correctCount: 0,
       wrongCount: 0,
-      // keep mistakesQueue fixed; wrongIds for this pass only for display
       wrongIds: [],
     };
     renderQuestion();
@@ -189,9 +181,7 @@
       b.setAttribute("aria-label", m.label);
       if (current === m.id) b.classList.add("active");
       b.addEventListener("click", () => {
-        const key = String(q.id);
-        if (marks[key] === m.id) delete marks[key];
-        else marks[key] = m.id;
+        marks = Q.toggleMark(marks, q.id, m.id);
         saveMarks();
         renderMarkBar(q);
       });
@@ -207,6 +197,7 @@
     el.qText.textContent = q.question;
     el.confidence.hidden = true;
     el.confidence.className = "confidence";
+    el.confirm.hidden = true;
     el.next.hidden = true;
     session.selected = null;
     session.locked = false;
@@ -218,7 +209,7 @@
       b.type = "button";
       b.className = "option";
       b.textContent = text;
-      b.addEventListener("click", () => onOptionTap(idx, b));
+      b.addEventListener("click", () => onOptionTap(idx));
       el.options.appendChild(b);
     });
     show("quiz");
@@ -226,38 +217,41 @@
 
   function onOptionTap(idx) {
     if (session.locked) return;
-    const q = currentQ();
-    const buttons = [...el.options.querySelectorAll(".option")];
-
-    if (session.selected === idx) {
-      // confirm
-      session.locked = true;
-      const ok = idx === q.correct_index;
-      buttons.forEach((btn, i) => {
-        btn.disabled = true;
-        if (i === q.correct_index) btn.classList.add("correct");
-        else if (i === idx && !ok) btn.classList.add("wrong");
-        btn.classList.remove("selected");
-      });
-      if (ok) session.correctCount += 1;
-      else {
-        session.wrongCount += 1;
-        if (session.mode === "pool") session.wrongIds.push(q.id);
-      }
-      const conf = CONF_UA[q.confidence] || CONF_UA.medium;
-      el.confidence.hidden = false;
-      el.confidence.className = `confidence ${conf.cls}`;
-      el.confidence.textContent = conf.text;
-      el.next.hidden = false;
-      el.next.textContent =
-        session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
-      return;
-    }
-
     session.selected = idx;
+    const buttons = [...el.options.querySelectorAll(".option")];
     buttons.forEach((btn, i) => {
       btn.classList.toggle("selected", i === idx);
     });
+    el.confirm.hidden = false;
+  }
+
+  function confirmAnswer() {
+    if (!session || session.locked || session.selected === null) return;
+    const q = currentQ();
+    const idx = session.selected;
+    const buttons = [...el.options.querySelectorAll(".option")];
+    const result = Q.gradeAnswer(idx, q.correct_index);
+
+    session.locked = true;
+    buttons.forEach((btn, i) => {
+      btn.disabled = true;
+      if (i === q.correct_index) btn.classList.add("correct");
+      else if (i === idx && !result.ok) btn.classList.add("wrong");
+      btn.classList.remove("selected");
+    });
+
+    session.correctCount += result.deltaCorrect;
+    session.wrongCount += result.deltaWrong;
+    if (!result.ok && session.mode === "pool") session.wrongIds.push(q.id);
+
+    const conf = CONF_UA[q.confidence] || CONF_UA.medium;
+    el.confidence.hidden = false;
+    el.confidence.className = `confidence ${conf.cls}`;
+    el.confidence.textContent = conf.text;
+    el.confirm.hidden = true;
+    el.next.hidden = false;
+    el.next.textContent =
+      session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
   }
 
   function goNext() {
@@ -296,6 +290,7 @@
     show("summary");
   }
 
+  el.confirm.addEventListener("click", confirmAnswer);
   el.next.addEventListener("click", goNext);
   el.homeBtn.addEventListener("click", () => {
     session = null;
