@@ -104,9 +104,21 @@ def test_ui_has_confirm_button():
     assert "quiz-logic.js" in html
 
 
+def test_question_3286_repaired():
+    """Source row was split: empty stem + 3 options; should be restored."""
+    questions = json.loads((DATA / "questions.json").read_text(encoding="utf-8"))
+    q = next(x for x in questions if x["id"] == 3286)
+    assert (q["question"] or "").strip()
+    assert len(q["options"]) == 4
+    pools = json.loads((DATA / "pools.json").read_text(encoding="utf-8"))
+    b = pools["bank"]["3286"]
+    assert (b["question"] or "").strip()
+    assert len(b["options"]) == 4
+
+
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.1"
+    assert version == "1.0.2"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")

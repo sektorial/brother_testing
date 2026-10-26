@@ -224,6 +224,7 @@
   function startPool(poolId) {
     const pool = data.pools.find((p) => p.id === poolId);
     const queue = questionsFromIds(pool.question_ids);
+    const savedStats = Q.sessionStatsFromSaved(queue, answers);
     session = {
       mode: "pool",
       title: `Пул ${poolId}`,
@@ -231,9 +232,9 @@
       index: 0,
       selected: null,
       locked: false,
-      correctCount: 0,
-      wrongCount: 0,
-      wrongIds: [],
+      correctCount: savedStats.correctCount,
+      wrongCount: savedStats.wrongCount,
+      wrongIds: savedStats.wrongIds.slice(),
       mistakesQueue: null,
       poolId,
       markFilter: null,
@@ -248,6 +249,7 @@
       .sort((a, b) => a - b);
     const queue = questionsFromIds(ids);
     const meta = MARKS.find((m) => m.id === markId);
+    const savedStats = Q.sessionStatsFromSaved(queue, answers);
     session = {
       mode: "marks",
       title: `${meta.icon} ${meta.label}`,
@@ -255,8 +257,8 @@
       index: 0,
       selected: null,
       locked: false,
-      correctCount: 0,
-      wrongCount: 0,
+      correctCount: savedStats.correctCount,
+      wrongCount: savedStats.wrongCount,
       wrongIds: [],
       mistakesQueue: null,
       poolId: null,
@@ -305,12 +307,30 @@
     }
   }
 
+  function showConfidence(level) {
+    const conf = CONF_UA[level] || CONF_UA.medium;
+    el.confidence.hidden = false;
+    el.confidence.className = `confidence ${conf.cls}`;
+    el.confidence.textContent = conf.text;
+  }
+
+  function lockOptionsReview(selectedIndex, correctIndex) {
+    const buttons = [...el.options.querySelectorAll(".option")];
+    const ok = selectedIndex === correctIndex;
+    buttons.forEach((btn, i) => {
+      btn.disabled = true;
+      btn.classList.remove("selected");
+      if (i === correctIndex) btn.classList.add("correct");
+      else if (i === selectedIndex && !ok) btn.classList.add("wrong");
+    });
+  }
+
   function renderQuestion() {
     const q = currentQ();
     el.title.textContent = session.title;
     el.progress.textContent = `${session.index + 1} / ${session.queue.length}`;
     el.qCategory.textContent = CAT_UA[q.category] || q.category;
-    el.qText.textContent = q.question;
+    el.qText.textContent = q.question || "(Текст питання відсутній у джерелі)";
     el.confidence.hidden = true;
     el.confidence.className = "confidence";
     el.confirm.hidden = true;
@@ -328,6 +348,18 @@
       b.addEventListener("click", () => onOptionTap(idx));
       el.options.appendChild(b);
     });
+
+    const saved = Q.getSavedAnswer(answers, q.id);
+    const review = Q.reviewStateFromSaved(saved);
+    if (review) {
+      session.selected = review.selectedIndex;
+      session.locked = true;
+      lockOptionsReview(review.selectedIndex, review.correctIndex);
+      showConfidence(q.confidence);
+      el.next.hidden = false;
+      el.next.textContent =
+        session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
+    }
     show("quiz");
   }
 
@@ -345,16 +377,17 @@
     if (!session || session.locked || session.selected === null) return;
     const q = currentQ();
     const idx = session.selected;
-    const buttons = [...el.options.querySelectorAll(".option")];
     const result = Q.gradeAnswer(idx, q.correct_index);
+    const prev = Q.getSavedAnswer(answers, q.id);
+
+    if (prev) {
+      session.correctCount -= prev.ok ? 1 : 0;
+      session.wrongCount -= prev.ok ? 0 : 1;
+      session.wrongIds = session.wrongIds.filter((id) => id !== q.id);
+    }
 
     session.locked = true;
-    buttons.forEach((btn, i) => {
-      btn.disabled = true;
-      if (i === q.correct_index) btn.classList.add("correct");
-      else if (i === idx && !result.ok) btn.classList.add("wrong");
-      btn.classList.remove("selected");
-    });
+    lockOptionsReview(idx, q.correct_index);
 
     session.correctCount += result.deltaCorrect;
     session.wrongCount += result.deltaWrong;
@@ -363,10 +396,7 @@
     answers = Q.recordAnswer(answers, q.id, idx, q.correct_index);
     saveAnswers();
 
-    const conf = CONF_UA[q.confidence] || CONF_UA.medium;
-    el.confidence.hidden = false;
-    el.confidence.className = `confidence ${conf.cls}`;
-    el.confidence.textContent = conf.text;
+    showConfidence(q.confidence);
     el.confirm.hidden = true;
     el.next.hidden = false;
     el.next.textContent =

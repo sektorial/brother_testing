@@ -22573,14 +22573,14 @@
   },
   "3285": {
     "correct_index": 0,
-    "correct_text": "за заявою будь-якої особи",
-    "source": "llm_batch",
-    "confidence": "low"
+    "correct_text": "за заявою учасника судового провадження чи органу виконання судового рішення, приватного виконавця",
+    "source": "manual_fix",
+    "confidence": "medium"
   },
   "3286": {
     "correct_index": 0,
     "correct_text": "за заявою учасника судового провадження чи органу виконання судового рішення, приватного виконавця",
-    "source": "llm_batch",
+    "source": "manual_fix",
     "confidence": "high"
   },
   "3300": {

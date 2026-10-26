@@ -79,6 +79,22 @@ test("clearAllMarks and clearMarksOfType", () => {
   assert.strictEqual(Q.totalMarks(m), 0);
 });
 
+test("reviewStateFromSaved and sessionStatsFromSaved", () => {
+  let answers = {};
+  answers = Q.recordAnswer(answers, 10, 1, 1, 1);
+  answers = Q.recordAnswer(answers, 11, 0, 2, 2);
+  const review = Q.reviewStateFromSaved(Q.getSavedAnswer(answers, 10));
+  assert.strictEqual(review.locked, true);
+  assert.strictEqual(review.ok, true);
+  assert.strictEqual(review.selectedIndex, 1);
+  const queue = [{ id: 10 }, { id: 11 }, { id: 12 }];
+  const stats = Q.sessionStatsFromSaved(queue, answers);
+  assert.strictEqual(stats.correctCount, 1);
+  assert.strictEqual(stats.wrongCount, 1);
+  assert.deepStrictEqual(stats.wrongIds, [11]);
+  assert.strictEqual(Q.reviewStateFromSaved(null), null);
+});
+
 test("recordAnswer and clearAllAnswers", () => {
   let a = {};
   a = Q.recordAnswer(a, 10, 1, 1, 1000);

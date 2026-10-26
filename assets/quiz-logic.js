@@ -85,6 +85,37 @@
     return { answered, correct, total: questionIds.length };
   }
 
+  function getSavedAnswer(answers, questionId) {
+    return (answers && answers[String(questionId)]) || null;
+  }
+
+  /** Build locked review UI model from a saved answer. */
+  function reviewStateFromSaved(saved) {
+    if (!saved) return null;
+    return {
+      locked: true,
+      selectedIndex: saved.selected_index,
+      correctIndex: saved.correct_index,
+      ok: !!saved.ok,
+    };
+  }
+
+  function sessionStatsFromSaved(queue, answers) {
+    let correctCount = 0;
+    let wrongCount = 0;
+    const wrongIds = [];
+    for (const q of queue) {
+      const a = getSavedAnswer(answers, q.id);
+      if (!a) continue;
+      if (a.ok) correctCount += 1;
+      else {
+        wrongCount += 1;
+        wrongIds.push(q.id);
+      }
+    }
+    return { correctCount, wrongCount, wrongIds };
+  }
+
   /**
    * Clear helpers with injectable confirm (for UI + tests).
    * confirmFn(message) -> boolean | Promise<boolean>
@@ -199,6 +230,9 @@
     countAnswers,
     countCorrectAnswers,
     poolAnswerStats,
+    getSavedAnswer,
+    reviewStateFromSaved,
+    sessionStatsFromSaved,
     requestClearAllMarks,
     requestClearMarksOfType,
     requestClearAllAnswers,
