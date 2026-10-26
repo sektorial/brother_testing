@@ -33,6 +33,58 @@
     return Object.values(marks).filter((v) => v === markId).length;
   }
 
+  function clearAllMarks() {
+    return {};
+  }
+
+  function clearMarksOfType(marks, markId) {
+    const next = { ...marks };
+    for (const key of Object.keys(next)) {
+      if (next[key] === markId) delete next[key];
+    }
+    return next;
+  }
+
+  function totalMarks(marks) {
+    return Object.keys(marks).length;
+  }
+
+  function recordAnswer(answers, questionId, selectedIndex, correctIndex, ts) {
+    const graded = gradeAnswer(selectedIndex, correctIndex);
+    const next = { ...answers };
+    next[String(questionId)] = {
+      selected_index: selectedIndex,
+      correct_index: correctIndex,
+      ok: graded.ok,
+      ts: ts || Date.now(),
+    };
+    return next;
+  }
+
+  function clearAllAnswers() {
+    return {};
+  }
+
+  function countAnswers(answers) {
+    return Object.keys(answers || {}).length;
+  }
+
+  function countCorrectAnswers(answers) {
+    return Object.values(answers || {}).filter((a) => a && a.ok).length;
+  }
+
+  function poolAnswerStats(questionIds, answers) {
+    let answered = 0;
+    let correct = 0;
+    for (const id of questionIds) {
+      const a = answers[String(id)];
+      if (!a) continue;
+      answered += 1;
+      if (a.ok) correct += 1;
+    }
+    return { answered, correct, total: questionIds.length };
+  }
+
   function gradeAnswer(selectedIndex, correctIndex) {
     const ok = selectedIndex === correctIndex;
     return {
@@ -95,6 +147,14 @@
     QUOTA,
     toggleMark,
     countMarks,
+    clearAllMarks,
+    clearMarksOfType,
+    totalMarks,
+    recordAnswer,
+    clearAllAnswers,
+    countAnswers,
+    countCorrectAnswers,
+    poolAnswerStats,
     gradeAnswer,
     buildMistakesQueue,
     validatePoolShape,

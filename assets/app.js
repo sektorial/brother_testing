@@ -15,6 +15,7 @@
     low: { text: "Упевненість у ключі: низька — варто перевірити норму", cls: "low" },
   };
   const LS_MARKS = "brother_testing_marks_v1";
+  const LS_ANSWERS = "brother_testing_answers_v1";
 
   const el = {
     homeBtn: document.getElementById("btn-home"),
@@ -25,6 +26,7 @@
     summary: document.getElementById("screen-summary"),
     poolGrid: document.getElementById("pool-grid"),
     markNav: document.getElementById("mark-nav"),
+    answersStats: document.getElementById("answers-stats"),
     qCategory: document.getElementById("q-category"),
     markBar: document.getElementById("mark-bar"),
     qText: document.getElementById("q-text"),
@@ -36,12 +38,16 @@
     mistakes: document.getElementById("btn-mistakes"),
     again: document.getElementById("btn-again"),
     toHome: document.getElementById("btn-to-home"),
+    clearMarks: document.getElementById("btn-clear-marks"),
+    clearAnswers: document.getElementById("btn-clear-answers"),
   };
 
   /** @type {{ pools: any[], bank: Record<string, any>, meta: any } | null} */
   let data = null;
   /** @type {Record<string, string>} */
   let marks = loadMarks();
+  /** @type {Record<string, { selected_index: number, correct_index: number, ok: boolean, ts: number }>} */
+  let answers = loadAnswers();
 
   /** @type {null | {
    *   mode: 'pool' | 'marks' | 'mistakes',
@@ -69,6 +75,16 @@
   function saveMarks() {
     localStorage.setItem(LS_MARKS, JSON.stringify(marks));
   }
+  function loadAnswers() {
+    try {
+      return JSON.parse(localStorage.getItem(LS_ANSWERS) || "{}") || {};
+    } catch {
+      return {};
+    }
+  }
+  function saveAnswers() {
+    localStorage.setItem(LS_ANSWERS, JSON.stringify(answers));
+  }
 
   function show(screen) {
     el.home.hidden = screen !== "home";
@@ -82,23 +98,100 @@
     el.title.textContent = "Тренажер";
     el.poolGrid.innerHTML = "";
     for (const pool of data.pools) {
+      const stats = Q.poolAnswerStats(pool.question_ids, answers);
       const b = document.createElement("button");
       b.type = "button";
-      b.textContent = String(pool.id);
+      if (stats.answered > 0) b.classList.add("has-progress");
+      b.innerHTML =
+        `<span>${pool.id}</span>` +
+        (stats.answered
+          ? `<span class="pool-sub">${stats.correct}/${stats.answered}</span>`
+          : `<span class="pool-sub">—</span>`);
+      b.title =
+        stats.answered > 0
+          ? `Пул ${pool.id}: правильно ${stats.correct} з ${stats.answered} збережених відповідей`
+          : `Пул ${pool.id}`;
       b.addEventListener("click", () => startPool(pool.id));
       el.poolGrid.appendChild(b);
     }
     el.markNav.innerHTML = "";
     for (const m of MARKS) {
       const count = Q.countMarks(marks, m.id);
-      const b = document.createElement("button");
-      b.type = "button";
-      b.innerHTML = `<span>${m.icon} ${m.label}</span><span class="count">${count}</span>`;
-      b.disabled = count === 0;
-      b.addEventListener("click", () => startMarked(m.id));
-      el.markNav.appendChild(b);
+      const row = document.createElement("div");
+      row.className = "mark-row";
+
+      const open = document.createElement("button");
+      open.type = "button";
+      open.className = "mark-open";
+      open.innerHTML = `<span>${m.icon} ${m.label}</span><span class="count">${count}</span>`;
+      open.disabled = count === 0;
+      open.addEventListener("click", () => startMarked(m.id));
+
+      const clearOne = document.createElement("button");
+      clearOne.type = "button";
+      clearOne.className = "mark-clear-one";
+      clearOne.textContent = "Скинути";
+      clearOne.disabled = count === 0;
+      clearOne.title = `Скинути лише мітки «${m.label}»`;
+      clearOne.addEventListener("click", () => clearOneMarkType(m));
+
+      row.appendChild(open);
+      row.appendChild(clearOne);
+      el.markNav.appendChild(row);
     }
+    const answered = Q.countAnswers(answers);
+    const correct = Q.countCorrectAnswers(answers);
+    el.answersStats.textContent = answered
+      ? `Збережено відповідей: ${answered} (правильних: ${correct}).`
+      : "Збережених відповідей ще немає.";
+    el.clearMarks.disabled = Q.totalMarks(marks) === 0;
+    el.clearAnswers.disabled = answered === 0;
     show("home");
+  }
+
+  function clearOneMarkType(meta) {
+    const n = Q.countMarks(marks, meta.id);
+    if (!n) return;
+    if (
+      !confirm(
+        `Скинути всі мітки «${meta.label}» (${n})?\n\nЦю дію не можна скасувати.`
+      )
+    ) {
+      return;
+    }
+    marks = Q.clearMarksOfType(marks, meta.id);
+    saveMarks();
+    renderHome();
+  }
+
+  function clearAllSavedMarks() {
+    const n = Q.totalMarks(marks);
+    if (!n) return;
+    if (
+      !confirm(
+        `Скинути ВСІ мітки (${n})?\n\nЦю дію не можна скасувати.`
+      )
+    ) {
+      return;
+    }
+    marks = Q.clearAllMarks();
+    saveMarks();
+    renderHome();
+  }
+
+  function clearAllSavedAnswers() {
+    const n = Q.countAnswers(answers);
+    if (!n) return;
+    if (
+      !confirm(
+        `Скинути всі збережені відповіді (${n})?\n\nПрогрес на пулах обнулиться. Цю дію не можна скасувати.`
+      )
+    ) {
+      return;
+    }
+    answers = Q.clearAllAnswers();
+    saveAnswers();
+    renderHome();
   }
 
   function questionsFromIds(ids) {
@@ -244,6 +337,9 @@
     session.wrongCount += result.deltaWrong;
     if (!result.ok && session.mode === "pool") session.wrongIds.push(q.id);
 
+    answers = Q.recordAnswer(answers, q.id, idx, q.correct_index);
+    saveAnswers();
+
     const conf = CONF_UA[q.confidence] || CONF_UA.medium;
     el.confidence.hidden = false;
     el.confidence.className = `confidence ${conf.cls}`;
@@ -292,6 +388,8 @@
 
   el.confirm.addEventListener("click", confirmAnswer);
   el.next.addEventListener("click", goNext);
+  el.clearMarks.addEventListener("click", clearAllSavedMarks);
+  el.clearAnswers.addEventListener("click", clearAllSavedAnswers);
   el.homeBtn.addEventListener("click", () => {
     session = null;
     renderHome();

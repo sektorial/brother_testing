@@ -77,22 +77,44 @@ body {
   gap: 8px;
 }
 .pool-grid button {
-  min-height: var(--tap);
+  min-height: calc(var(--tap) + 8px);
   border: 1px solid var(--line);
   background: var(--card);
   border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  line-height: 1.1;
 }
-.pool-grid button:active { background: var(--accent-soft); }
+.pool-grid button .pool-sub {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+.pool-grid button.has-progress {
+  border-color: #9ec9b8;
+  background: var(--accent-soft);
+}
+.pool-grid button:active { filter: brightness(0.97); }
 
 .mark-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
 }
-.mark-nav button {
+.mark-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: stretch;
+}
+.mark-nav .mark-open {
   min-height: var(--tap);
   border: 1px solid var(--line);
   background: var(--card);
@@ -103,9 +125,32 @@ body {
   justify-content: space-between;
   padding: 0 14px;
 }
+.mark-nav .mark-clear-one {
+  min-width: 96px;
+  min-height: var(--tap);
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  color: var(--danger);
+  font-size: 0.9rem;
+  padding: 0 10px;
+}
+.mark-nav .mark-clear-one:disabled {
+  opacity: 0.4;
+  color: var(--muted);
+}
 .mark-nav .count {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+.reset-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.danger-outline {
+  border-color: #f0b4ae !important;
+  color: var(--danger) !important;
 }
 
 .meta-row {

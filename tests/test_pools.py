@@ -102,3 +102,20 @@ def test_ui_has_confirm_button():
     assert 'id="btn-confirm"' in html
     assert "Підтвердити" in html
     assert "quiz-logic.js" in html
+
+
+def test_ui_has_clear_marks_controls():
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    assert 'id="btn-clear-marks"' in html
+    assert "Скинути всі мітки" in html
+    assert 'id="btn-clear-answers"' in html
+    assert "Скинути збережені відповіді" in html
+    logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
+    assert "clearAllMarks" in logic
+    assert "clearMarksOfType" in logic
+    assert "recordAnswer" in logic
+    assert "clearAllAnswers" in logic
+    app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "brother_testing_answers_v1" in app
+    assert "confirm(" in app
+    assert "clearAllSavedAnswers" in app

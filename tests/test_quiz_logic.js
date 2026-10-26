@@ -69,4 +69,28 @@ test("confidenceLabel", () => {
   assert.strictEqual(Q.confidenceLabel("low"), "низька");
 });
 
+test("clearAllMarks and clearMarksOfType", () => {
+  let m = { "1": "star", "2": "flag", "3": "star" };
+  assert.strictEqual(Q.totalMarks(m), 3);
+  m = Q.clearMarksOfType(m, "star");
+  assert.deepStrictEqual(m, { "2": "flag" });
+  m = Q.clearAllMarks();
+  assert.deepStrictEqual(m, {});
+  assert.strictEqual(Q.totalMarks(m), 0);
+});
+
+test("recordAnswer and clearAllAnswers", () => {
+  let a = {};
+  a = Q.recordAnswer(a, 10, 1, 1, 1000);
+  a = Q.recordAnswer(a, 11, 0, 2, 1001);
+  assert.strictEqual(Q.countAnswers(a), 2);
+  assert.strictEqual(Q.countCorrectAnswers(a), 1);
+  assert.strictEqual(a["10"].ok, true);
+  assert.strictEqual(a["11"].ok, false);
+  const stats = Q.poolAnswerStats([10, 11, 12], a);
+  assert.deepStrictEqual(stats, { answered: 2, correct: 1, total: 3 });
+  a = Q.clearAllAnswers();
+  assert.strictEqual(Q.countAnswers(a), 0);
+});
+
 console.log("All quiz-logic tests passed.");
