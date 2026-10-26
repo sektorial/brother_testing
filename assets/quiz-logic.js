@@ -114,14 +114,13 @@
     return { answered, correct, wrong, total };
   }
 
-  /** Icon strip: wrong / answered / total (for list + in-pool header). */
+  /** Icon strip: wrong count + answered/total with one icon. */
   function formatPoolStatsHtml(stats) {
     const wrong = stats.wrong != null ? stats.wrong : Math.max(0, stats.answered - stats.correct);
     return (
       `<span class="pool-stats" aria-label="Статистика пулу">` +
       `<span class="stat stat-wrong" title="Неправильні відповіді"><span class="stat-ico" aria-hidden="true">✗</span>${wrong}</span>` +
-      `<span class="stat stat-answered" title="Надані відповіді"><span class="stat-ico" aria-hidden="true">✎</span>${stats.answered}</span>` +
-      `<span class="stat stat-total" title="Усього питань у пулі"><span class="stat-ico" aria-hidden="true">#</span>${stats.total}</span>` +
+      `<span class="stat stat-answered" title="Надані / усього"><span class="stat-ico" aria-hidden="true">✎</span>${stats.answered}/${stats.total}</span>` +
       `</span>`
     );
   }
@@ -139,6 +138,24 @@
       correctIndex: saved.correct_index,
       ok: !!saved.ok,
     };
+  }
+
+  function canGoPrev(index) {
+    return index > 0;
+  }
+
+  function canGoNext(index, total) {
+    return index + 1 < total;
+  }
+
+  function nextIndex(index, total) {
+    if (!canGoNext(index, total)) return index;
+    return index + 1;
+  }
+
+  function prevIndex(index) {
+    if (!canGoPrev(index)) return index;
+    return index - 1;
   }
 
   function sessionStatsFromSaved(queue, answers) {
@@ -312,6 +329,10 @@
     getSavedAnswer,
     reviewStateFromSaved,
     sessionStatsFromSaved,
+    canGoPrev,
+    canGoNext,
+    nextIndex,
+    prevIndex,
     requestClearAllMarks,
     requestClearMarksOfType,
     requestClearAllAnswers,

@@ -33,7 +33,9 @@
     options: document.getElementById("options"),
     confidence: document.getElementById("confidence"),
     confirm: document.getElementById("btn-confirm"),
+    prev: document.getElementById("btn-prev"),
     next: document.getElementById("btn-next"),
+    navRow: document.getElementById("nav-row"),
     summaryStats: document.getElementById("summary-stats"),
     mistakes: document.getElementById("btn-mistakes"),
     again: document.getElementById("btn-again"),
@@ -457,6 +459,16 @@
     });
   }
 
+  function syncNavButtons() {
+    if (!session) return;
+    const atStart = session.index <= 0;
+    const atEnd = session.index + 1 >= session.queue.length;
+    el.prev.disabled = atStart;
+    el.next.disabled = false;
+    el.next.textContent = atEnd ? "Завершити" : "Далі →";
+    el.prev.textContent = "← Назад";
+  }
+
   function renderQuestion() {
     const q = currentQ();
     el.title.textContent = session.title;
@@ -466,7 +478,6 @@
     el.confidence.hidden = true;
     el.confidence.className = "confidence";
     el.confirm.hidden = true;
-    el.next.hidden = true;
     session.selected = null;
     session.locked = false;
     renderMarkBar(q);
@@ -488,10 +499,8 @@
       session.locked = true;
       lockOptionsReview(review.selectedIndex, review.correctIndex);
       showConfidence(q.confidence);
-      el.next.hidden = false;
-      el.next.textContent =
-        session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
     }
+    syncNavButtons();
     syncPoolResetButtons();
     show("quiz");
   }
@@ -531,18 +540,26 @@
 
     showConfidence(q.confidence);
     el.confirm.hidden = true;
-    el.next.hidden = false;
-    el.next.textContent =
-      session.index + 1 >= session.queue.length ? "Завершити" : "Далі";
+    syncNavButtons();
+    syncPoolResetButtons();
+  }
+
+  function goPrev() {
+    if (!session) return;
+    const next = Q.prevIndex(session.index);
+    if (next === session.index) return;
+    session.index = next;
+    renderQuestion();
   }
 
   function goNext() {
     if (!session) return;
-    if (session.index + 1 >= session.queue.length) {
+    const total = session.queue.length;
+    if (!Q.canGoNext(session.index, total)) {
       finishSession();
       return;
     }
-    session.index += 1;
+    session.index = Q.nextIndex(session.index, total);
     renderQuestion();
   }
 
@@ -574,6 +591,7 @@
   }
 
   el.confirm.addEventListener("click", confirmAnswer);
+  el.prev.addEventListener("click", goPrev);
   el.next.addEventListener("click", goNext);
   el.clearMarks.addEventListener("click", (e) => {
     e.preventDefault();

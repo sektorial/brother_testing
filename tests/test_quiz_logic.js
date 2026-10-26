@@ -79,6 +79,17 @@ test("clearAllMarks and clearMarksOfType", () => {
   assert.strictEqual(Q.totalMarks(m), 0);
 });
 
+test("pagination helpers", () => {
+  assert.strictEqual(Q.canGoPrev(0), false);
+  assert.strictEqual(Q.canGoPrev(1), true);
+  assert.strictEqual(Q.canGoNext(98, 100), true);
+  assert.strictEqual(Q.canGoNext(99, 100), false);
+  assert.strictEqual(Q.prevIndex(0), 0);
+  assert.strictEqual(Q.prevIndex(5), 4);
+  assert.strictEqual(Q.nextIndex(5, 100), 6);
+  assert.strictEqual(Q.nextIndex(99, 100), 99);
+});
+
 test("reviewStateFromSaved and sessionStatsFromSaved", () => {
   let answers = {};
   answers = Q.recordAnswer(answers, 10, 1, 1, 1);
@@ -113,10 +124,21 @@ test("recordAnswer and clearAllAnswers", () => {
   const html = Q.formatPoolStatsHtml(stats);
   assert.ok(html.includes("stat-wrong"));
   assert.ok(html.includes("stat-answered"));
-  assert.ok(html.includes("stat-total"));
-  assert.ok(html.includes(">1<") || html.includes("1</span>"));
+  assert.ok(html.includes("2/3"));
+  assert.ok(!html.includes("stat-total"));
   a = Q.clearAllAnswers();
   assert.strictEqual(Q.countAnswers(a), 0);
+});
+
+test("pagination helpers", () => {
+  assert.strictEqual(Q.canGoPrev(0), false);
+  assert.strictEqual(Q.canGoPrev(1), true);
+  assert.strictEqual(Q.prevIndex(0), 0);
+  assert.strictEqual(Q.prevIndex(2), 1);
+  assert.strictEqual(Q.canGoNext(98, 100), true);
+  assert.strictEqual(Q.canGoNext(99, 100), false);
+  assert.strictEqual(Q.nextIndex(98, 100), 99);
+  assert.strictEqual(Q.nextIndex(99, 100), 99);
 });
 
 async function runClearTests() {

@@ -1,7 +1,7 @@
 # Статус проєкту (handoff)
 
 **Оновлено:** 2026-10-27 (~00:42 Europe/Kyiv)  
-**Версія застосунку:** `1.0.4` (`VERSION`, `assets/version.js`, показ у UI)  
+**Версія застосунку:** `1.0.5` (`VERSION`, `assets/version.js`, показ у UI)  
 **Мета:** HTML-тренажер тестів для iPhone (Safari), GitHub Pages, згідно з `requirements.md`.
 
 ---
@@ -16,7 +16,7 @@
 | Парсинг Excel → JSON | ✅ |
 | Ключ відповідей | ✅ **3972 / 3972** |
 | 40 пулів (стратегія B) | ✅ `data/pools.json` |
-| HTML-тренажер | ✅ v1.0.4 |
+| HTML-тренажер | ✅ v1.0.5 |
 | Тести | ✅ `pytest tests` |
 | GitHub Pages | ✅ `https://sektorial.github.io/brother_testing/` |
 

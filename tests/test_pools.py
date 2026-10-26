@@ -102,6 +102,12 @@ def test_ui_has_confirm_button():
     assert 'id="btn-confirm"' in html
     assert "Підтвердити" in html
     assert "quiz-logic.js" in html
+    assert 'id="btn-prev"' in html
+    assert 'id="btn-next"' in html
+    assert "Назад" in html
+    app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "goPrev" in app
+    assert "syncNavButtons" in app
 
 
 def test_question_3286_repaired():
@@ -118,7 +124,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.4"
+    assert version == "1.0.5"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -151,8 +157,12 @@ def test_ui_has_clear_marks_controls():
     assert "Скинути мітки пулу" in html
     assert 'id="pool-live-stats"' in html
     assert "<details" in html and "pool-reset" in html
+    assert 'id="btn-prev"' in html
+    assert 'id="nav-row"' in html
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "formatPoolStatsHtml" in logic
+    assert "canGoPrev" in logic
+    assert "canGoNext" in logic
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "clearAllMarks" in logic
     assert "clearMarksOfType" in logic

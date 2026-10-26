@@ -412,9 +412,23 @@ body {
 .confidence.medium { background: var(--warn-soft); color: var(--warn); }
 .confidence.low { background: var(--danger-soft); color: var(--danger); }
 
-#btn-confirm[hidden],
-#btn-next[hidden] {
+#btn-confirm[hidden] {
   display: none !important;
+}
+
+.nav-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+.nav-row .nav-btn {
+  width: 100%;
+  margin-top: 0;
+}
+.nav-row .nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .primary, .secondary, .ghost {
