@@ -104,10 +104,16 @@ def test_ui_has_confirm_button():
     assert "quiz-logic.js" in html
     assert 'id="btn-prev"' in html
     assert 'id="btn-next"' in html
+    assert 'id="btn-finish"' in html
+    assert 'id="btn-unanswered"' in html
     assert "Назад" in html
+    assert "Завершити" in html
     app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
     assert "goPrev" in app
     assert "syncNavButtons" in app
+    assert "startUnanswered" in app
+    assert "finishSession" in app
+    assert "applyHubStatsToSession" in app
 
 
 def test_question_3286_repaired():
@@ -124,7 +130,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.5"
+    assert version == "1.0.6"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")

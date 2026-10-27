@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Тренажер тестів</title>
-  <link rel="stylesheet" href="assets/app.css?v=1.0.5" />
+  <link rel="stylesheet" href="assets/app.css?v=1.0.6" />
 </head>
 <body>
   <div id="app">
@@ -61,6 +61,7 @@
       <div class="nav-row" id="nav-row">
         <button type="button" id="btn-prev" class="secondary nav-btn">← Назад</button>
         <button type="button" id="btn-next" class="secondary nav-btn">Далі →</button>
+        <button type="button" id="btn-finish" class="secondary nav-btn nav-finish">Завершити</button>
       </div>
       <details id="pool-reset" class="pool-reset" hidden>
         <summary>Скинути дані цього пулу…</summary>
@@ -76,6 +77,7 @@
       <p id="summary-stats" class="summary-stats"></p>
       <div id="summary-pool-stats" class="pool-live-stats" hidden></div>
       <div class="actions">
+        <button type="button" id="btn-unanswered" class="primary" hidden>Допроходити пропущені</button>
         <button type="button" id="btn-mistakes" class="primary" hidden>Пройти роботу над помилками</button>
         <button type="button" id="btn-again" class="secondary">Пройти пул знову</button>
         <button type="button" id="btn-to-home" class="ghost">До меню</button>
@@ -89,8 +91,8 @@
       </details>
     </main>
   </div>
-  <script src="assets/version.js?v=1.0.5"></script>
-  <script src="assets/quiz-logic.js?v=1.0.5"></script>
-  <script src="assets/app.js?v=1.0.5"></script>
+  <script src="assets/version.js?v=1.0.6"></script>
+  <script src="assets/quiz-logic.js?v=1.0.6"></script>
+  <script src="assets/app.js?v=1.0.6"></script>
 </body>
 </html>

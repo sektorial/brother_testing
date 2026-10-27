@@ -103,7 +103,20 @@ test("reviewStateFromSaved and sessionStatsFromSaved", () => {
   assert.strictEqual(stats.correctCount, 1);
   assert.strictEqual(stats.wrongCount, 1);
   assert.deepStrictEqual(stats.wrongIds, [11]);
+  assert.strictEqual(stats.unansweredCount, 1);
+  assert.deepStrictEqual(stats.unansweredIds, [12]);
   assert.strictEqual(Q.reviewStateFromSaved(null), null);
+});
+
+test("buildUnansweredQueue fixed ids", () => {
+  const bank = {
+    "10": { id: 10, question: "a" },
+    "20": { id: 20, question: "b" },
+  };
+  const q = Q.buildUnansweredQueue([20, 10], bank);
+  assert.strictEqual(q.length, 2);
+  assert.strictEqual(q[0].id, 20);
+  assert.strictEqual(q[1].id, 10);
 });
 
 test("recordAnswer and clearAllAnswers", () => {

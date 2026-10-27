@@ -35,8 +35,10 @@
     confirm: document.getElementById("btn-confirm"),
     prev: document.getElementById("btn-prev"),
     next: document.getElementById("btn-next"),
+    finish: document.getElementById("btn-finish"),
     navRow: document.getElementById("nav-row"),
     summaryStats: document.getElementById("summary-stats"),
+    unanswered: document.getElementById("btn-unanswered"),
     mistakes: document.getElementById("btn-mistakes"),
     again: document.getElementById("btn-again"),
     toHome: document.getElementById("btn-to-home"),
@@ -65,16 +67,22 @@
   let answers = loadAnswers();
 
   /** @type {null | {
-   *   mode: 'pool' | 'marks' | 'mistakes',
+   *   mode: 'pool' | 'marks' | 'mistakes' | 'unanswered',
+   *   sourceMode: 'pool' | 'marks',
    *   title: string,
+   *   hubTitle: string,
    *   queue: any[],
+   *   hubQueue: any[],
    *   index: number,
    *   selected: number | null,
    *   locked: boolean,
    *   correctCount: number,
    *   wrongCount: number,
    *   wrongIds: number[],
+   *   unansweredCount: number,
+   *   unansweredIds: number[],
    *   mistakesQueue: any[] | null,
+   *   unansweredQueue: any[] | null,
    *   poolId: number | null,
    *   markFilter: string | null,
    * }} */
@@ -262,7 +270,7 @@
   }
 
   function syncPoolResetButtons() {
-    const inPool = !!(session && session.mode === "pool" && session.poolId);
+    const inPool = !!(session && session.poolId);
     const ids = currentPoolIds() || [];
     const stats = Q.poolAnswerStats(ids, answers);
     const markN = Q.countMarksForIds(marks, ids);
@@ -307,17 +315,30 @@
     answers = result.answers;
     saveAnswers();
     if (session && session.poolId === poolId) {
-      const savedStats = Q.sessionStatsFromSaved(session.queue, answers);
-      session.correctCount = savedStats.correctCount;
-      session.wrongCount = savedStats.wrongCount;
-      session.wrongIds = savedStats.wrongIds.slice();
-      session.mistakesQueue = null;
+      applyHubStatsToSession();
       if (!el.quiz.hidden) renderQuestion();
       else if (!el.summary.hidden) finishSession();
       else renderHome();
     } else {
       renderHome();
     }
+  }
+
+  function applyHubStatsToSession() {
+    if (!session || !session.hubQueue) return null;
+    const savedStats = Q.sessionStatsFromSaved(session.hubQueue, answers);
+    session.correctCount = savedStats.correctCount;
+    session.wrongCount = savedStats.wrongCount;
+    session.wrongIds = savedStats.wrongIds.slice();
+    session.unansweredCount = savedStats.unansweredCount;
+    session.unansweredIds = savedStats.unansweredIds.slice();
+    session.mistakesQueue = savedStats.wrongIds.length
+      ? questionsFromIds(savedStats.wrongIds)
+      : [];
+    session.unansweredQueue = savedStats.unansweredIds.length
+      ? Q.buildUnansweredQueue(savedStats.unansweredIds, data.bank)
+      : [];
+    return savedStats;
   }
 
   async function clearPoolMarksById(poolId) {
@@ -358,21 +379,28 @@
   function startPool(poolId) {
     const pool = data.pools.find((p) => p.id === poolId);
     const queue = questionsFromIds(pool.question_ids);
-    const savedStats = Q.sessionStatsFromSaved(queue, answers);
+    const hubTitle = `Пул ${poolId}`;
     session = {
       mode: "pool",
-      title: `Пул ${poolId}`,
+      sourceMode: "pool",
+      title: hubTitle,
+      hubTitle,
       queue,
+      hubQueue: queue.slice(),
       index: 0,
       selected: null,
       locked: false,
-      correctCount: savedStats.correctCount,
-      wrongCount: savedStats.wrongCount,
-      wrongIds: savedStats.wrongIds.slice(),
+      correctCount: 0,
+      wrongCount: 0,
+      wrongIds: [],
+      unansweredCount: 0,
+      unansweredIds: [],
       mistakesQueue: null,
+      unansweredQueue: null,
       poolId,
       markFilter: null,
     };
+    applyHubStatsToSession();
     renderQuestion();
   }
 
@@ -383,25 +411,33 @@
       .sort((a, b) => a - b);
     const queue = questionsFromIds(ids);
     const meta = MARKS.find((m) => m.id === markId);
-    const savedStats = Q.sessionStatsFromSaved(queue, answers);
+    const hubTitle = `${meta.icon} ${meta.label}`;
     session = {
       mode: "marks",
-      title: `${meta.icon} ${meta.label}`,
+      sourceMode: "marks",
+      title: hubTitle,
+      hubTitle,
       queue,
+      hubQueue: queue.slice(),
       index: 0,
       selected: null,
       locked: false,
-      correctCount: savedStats.correctCount,
-      wrongCount: savedStats.wrongCount,
+      correctCount: 0,
+      wrongCount: 0,
       wrongIds: [],
+      unansweredCount: 0,
+      unansweredIds: [],
       mistakesQueue: null,
+      unansweredQueue: null,
       poolId: null,
       markFilter: markId,
     };
+    applyHubStatsToSession();
     renderQuestion();
   }
 
   function startMistakes() {
+    applyHubStatsToSession();
     if (!session || !session.mistakesQueue || !session.mistakesQueue.length) return;
     session = {
       ...session,
@@ -411,9 +447,23 @@
       index: 0,
       selected: null,
       locked: false,
-      correctCount: 0,
-      wrongCount: 0,
-      wrongIds: [],
+    };
+    renderQuestion();
+  }
+
+  function startUnanswered() {
+    applyHubStatsToSession();
+    if (!session || !session.unansweredQueue || !session.unansweredQueue.length) {
+      return;
+    }
+    session = {
+      ...session,
+      mode: "unanswered",
+      title: "Пропущені",
+      queue: session.unansweredQueue.slice(),
+      index: 0,
+      selected: null,
+      locked: false,
     };
     renderQuestion();
   }
@@ -462,11 +512,12 @@
   function syncNavButtons() {
     if (!session) return;
     const atStart = session.index <= 0;
-    const atEnd = session.index + 1 >= session.queue.length;
+    const atEnd = !Q.canGoNext(session.index, session.queue.length);
     el.prev.disabled = atStart;
-    el.next.disabled = false;
-    el.next.textContent = atEnd ? "Завершити" : "Далі →";
+    el.next.disabled = atEnd;
+    el.next.textContent = "Далі →";
     el.prev.textContent = "← Назад";
+    if (el.finish) el.finish.hidden = false;
   }
 
   function renderQuestion() {
@@ -519,24 +570,13 @@
     if (!session || session.locked || session.selected === null) return;
     const q = currentQ();
     const idx = session.selected;
-    const result = Q.gradeAnswer(idx, q.correct_index);
-    const prev = Q.getSavedAnswer(answers, q.id);
-
-    if (prev) {
-      session.correctCount -= prev.ok ? 1 : 0;
-      session.wrongCount -= prev.ok ? 0 : 1;
-      session.wrongIds = session.wrongIds.filter((id) => id !== q.id);
-    }
 
     session.locked = true;
     lockOptionsReview(idx, q.correct_index);
 
-    session.correctCount += result.deltaCorrect;
-    session.wrongCount += result.deltaWrong;
-    if (!result.ok && session.mode === "pool") session.wrongIds.push(q.id);
-
     answers = Q.recordAnswer(answers, q.id, idx, q.correct_index);
     saveAnswers();
+    applyHubStatsToSession();
 
     showConfidence(q.confidence);
     el.confirm.hidden = true;
@@ -555,37 +595,42 @@
   function goNext() {
     if (!session) return;
     const total = session.queue.length;
-    if (!Q.canGoNext(session.index, total)) {
-      finishSession();
-      return;
-    }
+    if (!Q.canGoNext(session.index, total)) return;
     session.index = Q.nextIndex(session.index, total);
     renderQuestion();
   }
 
   function finishSession() {
-    if (session.mode === "pool" && session.mistakesQueue === null) {
-      session.mistakesQueue = questionsFromIds(session.wrongIds);
-    }
-    el.title.textContent = session.title;
+    if (!session) return;
+    applyHubStatsToSession();
+    el.title.textContent = session.hubTitle || session.title;
+    const hubTotal = session.hubQueue ? session.hubQueue.length : session.queue.length;
+    const poolLine =
+      session.poolId != null
+        ? `<br><span style="color:var(--muted);font-size:0.95rem">Пул ${session.poolId} · ${hubTotal} питань</span>`
+        : session.sourceMode === "marks"
+          ? `<br><span style="color:var(--muted);font-size:0.95rem">${hubTotal} питань з міткою</span>`
+          : "";
     el.summaryStats.innerHTML =
       `<strong>Правильних:</strong> ${session.correctCount}<br>` +
-      `<strong>Неправильних:</strong> ${session.wrongCount}` +
-      (session.mode === "pool"
-        ? `<br><span style="color:var(--muted);font-size:0.95rem">Пул ${session.poolId} · ${session.queue.length} питань</span>`
-        : "");
-    const canMistakes =
-      !!session.mistakesQueue &&
-      session.mistakesQueue.length > 0 &&
-      (session.mode === "pool" || session.mode === "mistakes");
-    el.mistakes.hidden = !canMistakes;
+      `<strong>Неправильних:</strong> ${session.wrongCount}<br>` +
+      `<strong>Без відповіді:</strong> ${session.unansweredCount}` +
+      poolLine;
+
+    const unansweredN = session.unansweredQueue ? session.unansweredQueue.length : 0;
+    const wrongN = session.mistakesQueue ? session.mistakesQueue.length : 0;
+    if (el.unanswered) {
+      el.unanswered.hidden = unansweredN === 0;
+      el.unanswered.textContent = `Допроходити пропущені (${unansweredN})`;
+    }
+    el.mistakes.hidden = wrongN === 0;
     el.mistakes.textContent =
       session.mode === "mistakes"
-        ? "Пройти помилки ще раз"
-        : "Пройти роботу над помилками";
-    el.again.hidden = session.mode === "mistakes";
+        ? `Пройти помилки ще раз (${wrongN})`
+        : `Пройти роботу над помилками (${wrongN})`;
+    el.again.hidden = false;
     el.again.textContent =
-      session.mode === "marks" ? "Пройти мітки знову" : "Пройти пул знову";
+      session.sourceMode === "marks" ? "Пройти мітки знову" : "Пройти пул знову";
     syncPoolResetButtons();
     show("summary");
   }
@@ -593,6 +638,7 @@
   el.confirm.addEventListener("click", confirmAnswer);
   el.prev.addEventListener("click", goPrev);
   el.next.addEventListener("click", goNext);
+  if (el.finish) el.finish.addEventListener("click", finishSession);
   el.clearMarks.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -631,10 +677,11 @@
     session = null;
     renderHome();
   });
+  if (el.unanswered) el.unanswered.addEventListener("click", startUnanswered);
   el.mistakes.addEventListener("click", startMistakes);
   el.again.addEventListener("click", () => {
     if (!session) return;
-    if (session.mode === "marks" && session.markFilter) {
+    if (session.sourceMode === "marks" && session.markFilter) {
       startMarked(session.markFilter);
       return;
     }

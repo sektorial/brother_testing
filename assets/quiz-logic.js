@@ -162,16 +162,26 @@
     let correctCount = 0;
     let wrongCount = 0;
     const wrongIds = [];
+    const unansweredIds = [];
     for (const q of queue) {
       const a = getSavedAnswer(answers, q.id);
-      if (!a) continue;
+      if (!a) {
+        unansweredIds.push(q.id);
+        continue;
+      }
       if (a.ok) correctCount += 1;
       else {
         wrongCount += 1;
         wrongIds.push(q.id);
       }
     }
-    return { correctCount, wrongCount, wrongIds };
+    return {
+      correctCount,
+      wrongCount,
+      wrongIds,
+      unansweredCount: unansweredIds.length,
+      unansweredIds,
+    };
   }
 
   /**
@@ -271,6 +281,10 @@
     });
   }
 
+  function buildUnansweredQueue(unansweredIds, bank) {
+    return buildMistakesQueue(unansweredIds, bank);
+  }
+
   function validatePoolShape(pool, bank) {
     const ids = pool.question_ids;
     if (!Array.isArray(ids) || ids.length !== 100) {
@@ -340,6 +354,7 @@
     requestClearPoolMarks,
     gradeAnswer,
     buildMistakesQueue,
+    buildUnansweredQueue,
     validatePoolShape,
     confidenceLabel,
   };
