@@ -439,14 +439,22 @@
   function startMistakes() {
     applyHubStatsToSession();
     if (!session || !session.mistakesQueue || !session.mistakesQueue.length) return;
+    // Reset saved wrong answers so the user can re-answer without reveal.
+    const retryQueue = session.mistakesQueue.slice();
+    const retryIds = retryQueue.map((q) => q.id);
+    answers = Q.clearAnswersForIds(answers, retryIds);
+    saveAnswers();
     session = {
       ...session,
       mode: "mistakes",
       title: "Помилки",
-      queue: session.mistakesQueue.slice(),
+      queue: retryQueue,
       index: 0,
       selected: null,
       locked: false,
+      mistakesQueue: retryQueue.slice(),
+      wrongIds: retryIds.slice(),
+      wrongCount: retryIds.length,
     };
     renderQuestion();
   }

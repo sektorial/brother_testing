@@ -119,6 +119,24 @@ test("buildUnansweredQueue fixed ids", () => {
   assert.strictEqual(q[1].id, 10);
 });
 
+test("clearAnswersForIds resets only listed wrong answers", () => {
+  let answers = {};
+  answers = Q.recordAnswer(answers, 10, 0, 1, 1);
+  answers = Q.recordAnswer(answers, 11, 1, 1, 2);
+  answers = Q.recordAnswer(answers, 12, 0, 2, 3);
+  answers = Q.clearAnswersForIds(answers, [10, 12]);
+  assert.strictEqual(answers["10"], undefined);
+  assert.strictEqual(answers["12"], undefined);
+  assert.strictEqual(answers["11"].ok, true);
+  const stats = Q.sessionStatsFromSaved(
+    [{ id: 10 }, { id: 11 }, { id: 12 }],
+    answers
+  );
+  assert.strictEqual(stats.unansweredCount, 2);
+  assert.deepStrictEqual(stats.unansweredIds, [10, 12]);
+  assert.strictEqual(stats.correctCount, 1);
+});
+
 test("recordAnswer and clearAllAnswers", () => {
   let a = {};
   a = Q.recordAnswer(a, 10, 1, 1, 1000);
