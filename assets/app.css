@@ -52,6 +52,19 @@ body {
   color: var(--muted);
   font-size: 0.95rem;
 }
+.pool-timer {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  min-width: 4.8em;
+  text-align: right;
+}
+.pool-timer[hidden] {
+  display: none !important;
+}
 
 .screen { animation: fade 0.18s ease; }
 @keyframes fade {

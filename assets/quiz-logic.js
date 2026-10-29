@@ -323,6 +323,21 @@
     return map[level] || map.medium;
   }
 
+  /** Format elapsed milliseconds as HH:MM:SS (00:00:00). */
+  function formatElapsedHms(ms) {
+    const totalSec = Math.floor(Math.max(0, Number(ms) || 0) / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    return (
+      String(h).padStart(2, "0") +
+      ":" +
+      String(m).padStart(2, "0") +
+      ":" +
+      String(s).padStart(2, "0")
+    );
+  }
+
   return {
     MARKS,
     QUOTA,
@@ -357,5 +372,6 @@
     buildUnansweredQueue,
     validatePoolShape,
     confidenceLabel,
+    formatElapsedHms,
   };
 });

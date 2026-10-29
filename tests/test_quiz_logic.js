@@ -119,6 +119,15 @@ test("buildUnansweredQueue fixed ids", () => {
   assert.strictEqual(q[1].id, 10);
 });
 
+test("formatElapsedHms HH:MM:SS", () => {
+  assert.strictEqual(Q.formatElapsedHms(0), "00:00:00");
+  assert.strictEqual(Q.formatElapsedHms(999), "00:00:00");
+  assert.strictEqual(Q.formatElapsedHms(1000), "00:00:01");
+  assert.strictEqual(Q.formatElapsedHms(61_000), "00:01:01");
+  assert.strictEqual(Q.formatElapsedHms(3_661_000), "01:01:01");
+  assert.strictEqual(Q.formatElapsedHms(-5), "00:00:00");
+});
+
 test("clearAnswersForIds resets only listed wrong answers", () => {
   let answers = {};
   answers = Q.recordAnswer(answers, 10, 0, 1, 1);

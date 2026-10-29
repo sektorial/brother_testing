@@ -21,6 +21,7 @@
     homeBtn: document.getElementById("btn-home"),
     title: document.getElementById("header-title"),
     progress: document.getElementById("progress"),
+    poolTimer: document.getElementById("pool-timer"),
     home: document.getElementById("screen-home"),
     quiz: document.getElementById("screen-quiz"),
     summary: document.getElementById("screen-summary"),
@@ -85,8 +86,16 @@
    *   unansweredQueue: any[] | null,
    *   poolId: number | null,
    *   markFilter: string | null,
+   *   elapsedMs: number | null,
    * }} */
   let session = null;
+
+  /** Pool run timer (only for sourceMode === 'pool'). */
+  let poolTimer = {
+    startedAt: null,
+    intervalId: null,
+    running: false,
+  };
 
   function loadMarks() {
     try {
@@ -115,6 +124,61 @@
     el.summary.hidden = screen !== "summary";
     el.homeBtn.hidden = screen === "home";
     el.progress.hidden = screen !== "quiz";
+    syncPoolTimerVisibility(screen);
+  }
+
+  function readPoolTimerMs() {
+    if (poolTimer.running && poolTimer.startedAt != null) {
+      return Date.now() - poolTimer.startedAt;
+    }
+    if (session && session.elapsedMs != null) return session.elapsedMs;
+    return 0;
+  }
+
+  function paintPoolTimer(ms) {
+    if (!el.poolTimer) return;
+    el.poolTimer.textContent = Q.formatElapsedHms(ms);
+  }
+
+  function syncPoolTimerVisibility(screen) {
+    if (!el.poolTimer) return;
+    const isPoolSource = !!(session && session.sourceMode === "pool");
+    const showLive = screen === "quiz" && isPoolSource && session.mode === "pool";
+    const showFrozen =
+      screen === "summary" && isPoolSource && session.elapsedMs != null;
+    el.poolTimer.hidden = !(showLive || showFrozen);
+    if (showLive || showFrozen) paintPoolTimer(readPoolTimerMs());
+  }
+
+  function startPoolTimer() {
+    stopPoolTimer({ keepElapsed: false });
+    if (session) session.elapsedMs = null;
+    poolTimer.startedAt = Date.now();
+    poolTimer.running = true;
+    paintPoolTimer(0);
+    poolTimer.intervalId = setInterval(() => {
+      if (!poolTimer.running || poolTimer.startedAt == null) return;
+      paintPoolTimer(Date.now() - poolTimer.startedAt);
+    }, 250);
+  }
+
+  /** Stop ticking. If keepElapsed, freeze ms into session.elapsedMs. */
+  function stopPoolTimer(opts) {
+    const keepElapsed = !!(opts && opts.keepElapsed);
+    if (poolTimer.intervalId != null) {
+      clearInterval(poolTimer.intervalId);
+      poolTimer.intervalId = null;
+    }
+    if (poolTimer.running && poolTimer.startedAt != null) {
+      const ms = Date.now() - poolTimer.startedAt;
+      if (keepElapsed && session) {
+        session.elapsedMs = ms;
+        paintPoolTimer(ms);
+      }
+    }
+    poolTimer.running = false;
+    poolTimer.startedAt = null;
+    if (!keepElapsed && session) session.elapsedMs = null;
   }
 
   function renderHome() {
@@ -399,12 +463,15 @@
       unansweredQueue: null,
       poolId,
       markFilter: null,
+      elapsedMs: null,
     };
     applyHubStatsToSession();
+    startPoolTimer();
     renderQuestion();
   }
 
   function startMarked(markId) {
+    stopPoolTimer({ keepElapsed: false });
     const ids = Object.entries(marks)
       .filter(([, v]) => v === markId)
       .map(([id]) => Number(id))
@@ -431,6 +498,7 @@
       unansweredQueue: null,
       poolId: null,
       markFilter: markId,
+      elapsedMs: null,
     };
     applyHubStatsToSession();
     renderQuestion();
@@ -610,6 +678,9 @@
 
   function finishSession() {
     if (!session) return;
+    if (session.sourceMode === "pool" && poolTimer.running) {
+      stopPoolTimer({ keepElapsed: true });
+    }
     applyHubStatsToSession();
     el.title.textContent = session.hubTitle || session.title;
     const hubTotal = session.hubQueue ? session.hubQueue.length : session.queue.length;
@@ -619,10 +690,15 @@
         : session.sourceMode === "marks"
           ? `<br><span style="color:var(--muted);font-size:0.95rem">${hubTotal} питань з міткою</span>`
           : "";
+    const timeLine =
+      session.sourceMode === "pool" && session.elapsedMs != null
+        ? `<br><strong>Час:</strong> ${Q.formatElapsedHms(session.elapsedMs)}`
+        : "";
     el.summaryStats.innerHTML =
       `<strong>Правильних:</strong> ${session.correctCount}<br>` +
       `<strong>Неправильних:</strong> ${session.wrongCount}<br>` +
       `<strong>Без відповіді:</strong> ${session.unansweredCount}` +
+      timeLine +
       poolLine;
 
     const unansweredN = session.unansweredQueue ? session.unansweredQueue.length : 0;
@@ -678,10 +754,12 @@
     clearCurrentPoolMarks();
   });
   el.homeBtn.addEventListener("click", () => {
+    stopPoolTimer({ keepElapsed: false });
     session = null;
     renderHome();
   });
   el.toHome.addEventListener("click", () => {
+    stopPoolTimer({ keepElapsed: false });
     session = null;
     renderHome();
   });

@@ -106,6 +106,7 @@ def test_ui_has_confirm_button():
     assert 'id="btn-next"' in html
     assert 'id="btn-finish"' in html
     assert 'id="btn-unanswered"' in html
+    assert 'id="pool-timer"' in html
     assert "Назад" in html
     assert "Завершити" in html
     app = (ROOT / "assets" / "app.js").read_text(encoding="utf-8")
@@ -117,6 +118,10 @@ def test_ui_has_confirm_button():
     assert "applyHubStatsToSession" in app
     assert "retryQueue" in app
     assert "clearAnswersForIds(answers, retryIds)" in app
+    assert "startPoolTimer" in app
+    assert "stopPoolTimer" in app
+    logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
+    assert "formatElapsedHms" in logic
 
 
 def test_question_3286_repaired():
@@ -133,7 +138,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.7"
+    assert version == "1.0.8"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
