@@ -1,5 +1,5 @@
 /** App semver — bump together with root VERSION file. */
 (function (root) {
   "use strict";
-  root.APP_VERSION = "1.0.8";
+  root.APP_VERSION = "1.0.9";
 })(typeof globalThis !== "undefined" ? globalThis : this);

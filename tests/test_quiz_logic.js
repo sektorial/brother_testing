@@ -128,6 +128,19 @@ test("formatElapsedHms HH:MM:SS", () => {
   assert.strictEqual(Q.formatElapsedHms(-5), "00:00:00");
 });
 
+test("pool elapsed persist helpers", () => {
+  let timers = {};
+  assert.strictEqual(Q.getPoolElapsed(timers, 9), 0);
+  timers = Q.setPoolElapsed(timers, 9, 65000);
+  assert.strictEqual(Q.getPoolElapsed(timers, 9), 65000);
+  assert.strictEqual(Q.getPoolElapsed(timers, 1), 0);
+  timers = Q.setPoolElapsed(timers, 9, 0);
+  assert.strictEqual(timers["9"], undefined);
+  timers = Q.setPoolElapsed({}, 3, 1000);
+  timers = Q.clearPoolElapsed(timers, 3);
+  assert.deepStrictEqual(timers, {});
+});
+
 test("clearAnswersForIds resets only listed wrong answers", () => {
   let answers = {};
   answers = Q.recordAnswer(answers, 10, 0, 1, 1);

@@ -16,6 +16,7 @@
   };
   const LS_MARKS = "brother_testing_marks_v1";
   const LS_ANSWERS = "brother_testing_answers_v1";
+  const LS_TIMERS = "brother_testing_timers_v1";
 
   const el = {
     homeBtn: document.getElementById("btn-home"),
@@ -66,6 +67,8 @@
   let marks = loadMarks();
   /** @type {Record<string, { selected_index: number, correct_index: number, ok: boolean, ts: number }>} */
   let answers = loadAnswers();
+  /** @type {Record<string, number>} poolId -> elapsed ms */
+  let poolTimers = loadPoolTimers();
 
   /** @type {null | {
    *   mode: 'pool' | 'marks' | 'mistakes' | 'unanswered',
@@ -117,6 +120,16 @@
   function saveAnswers() {
     localStorage.setItem(LS_ANSWERS, JSON.stringify(answers));
   }
+  function loadPoolTimers() {
+    try {
+      return JSON.parse(localStorage.getItem(LS_TIMERS) || "{}") || {};
+    } catch {
+      return {};
+    }
+  }
+  function savePoolTimers() {
+    localStorage.setItem(LS_TIMERS, JSON.stringify(poolTimers));
+  }
 
   function show(screen) {
     el.home.hidden = screen !== "home";
@@ -150,35 +163,70 @@
     if (showLive || showFrozen) paintPoolTimer(readPoolTimerMs());
   }
 
-  function startPoolTimer() {
-    stopPoolTimer({ keepElapsed: false });
-    if (session) session.elapsedMs = null;
-    poolTimer.startedAt = Date.now();
+  function persistCurrentPoolElapsed(ms) {
+    if (!session || session.poolId == null) return;
+    poolTimers = Q.setPoolElapsed(poolTimers, session.poolId, ms);
+    savePoolTimers();
+  }
+
+  function clearPersistedPoolElapsed(poolId) {
+    poolTimers = Q.clearPoolElapsed(poolTimers, poolId);
+    savePoolTimers();
+  }
+
+  /**
+   * Start/resume pool timer.
+   * @param {{ reset?: boolean }} [opts]
+   */
+  function startPoolTimer(opts) {
+    const reset = !!(opts && opts.reset);
+    const poolId = session && session.poolId;
+    stopPoolTimer({ persist: false, clearSession: true });
+    let baseMs = 0;
+    if (reset && poolId != null) {
+      clearPersistedPoolElapsed(poolId);
+    } else if (poolId != null) {
+      baseMs = Q.getPoolElapsed(poolTimers, poolId);
+    }
+    if (session) session.elapsedMs = baseMs;
+    poolTimer.startedAt = Date.now() - baseMs;
     poolTimer.running = true;
-    paintPoolTimer(0);
+    paintPoolTimer(baseMs);
     poolTimer.intervalId = setInterval(() => {
       if (!poolTimer.running || poolTimer.startedAt == null) return;
       paintPoolTimer(Date.now() - poolTimer.startedAt);
     }, 250);
   }
 
-  /** Stop ticking. If keepElapsed, freeze ms into session.elapsedMs. */
+  /**
+   * Stop ticking.
+   * persist: save elapsed for current pool
+   * clearSession: wipe session.elapsedMs when discarding
+   */
   function stopPoolTimer(opts) {
-    const keepElapsed = !!(opts && opts.keepElapsed);
+    const persist = !!(opts && opts.persist);
+    const clearSession = !!(opts && opts.clearSession);
     if (poolTimer.intervalId != null) {
       clearInterval(poolTimer.intervalId);
       poolTimer.intervalId = null;
     }
+    let ms = 0;
     if (poolTimer.running && poolTimer.startedAt != null) {
-      const ms = Date.now() - poolTimer.startedAt;
-      if (keepElapsed && session) {
-        session.elapsedMs = ms;
-        paintPoolTimer(ms);
-      }
+      ms = Date.now() - poolTimer.startedAt;
+    } else if (session && session.elapsedMs != null) {
+      ms = session.elapsedMs;
     }
     poolTimer.running = false;
     poolTimer.startedAt = null;
-    if (!keepElapsed && session) session.elapsedMs = null;
+    if (persist) {
+      if (session) {
+        session.elapsedMs = ms;
+        paintPoolTimer(ms);
+      }
+      persistCurrentPoolElapsed(ms);
+    } else if (clearSession && session) {
+      session.elapsedMs = null;
+    }
   }
 
   function renderHome() {
@@ -324,6 +372,8 @@
     if (!result.cleared) return;
     answers = result.answers;
     saveAnswers();
+    poolTimers = {};
+    savePoolTimers();
     renderHome();
   }
 
@@ -378,11 +428,16 @@
     if (!result.cleared) return;
     answers = result.answers;
     saveAnswers();
+    clearPersistedPoolElapsed(poolId);
     if (session && session.poolId === poolId) {
       applyHubStatsToSession();
-      if (!el.quiz.hidden) renderQuestion();
-      else if (!el.summary.hidden) finishSession();
-      else renderHome();
+      if (!el.quiz.hidden) {
+        startPoolTimer({ reset: true });
+        renderQuestion();
+      } else if (!el.summary.hidden) {
+        session.elapsedMs = 0;
+        finishSession();
+      } else renderHome();
     } else {
       renderHome();
     }
@@ -440,10 +495,11 @@
     return Q.buildMistakesQueue(ids, data.bank);
   }
 
-  function startPool(poolId) {
+  function startPool(poolId, opts) {
     const pool = data.pools.find((p) => p.id === poolId);
     const queue = questionsFromIds(pool.question_ids);
     const hubTitle = `Пул ${poolId}`;
+    const resetTimer = !!(opts && opts.resetTimer);
     session = {
       mode: "pool",
       sourceMode: "pool",
@@ -466,12 +522,12 @@
       elapsedMs: null,
     };
     applyHubStatsToSession();
-    startPoolTimer();
+    startPoolTimer({ reset: resetTimer });
     renderQuestion();
   }
 
   function startMarked(markId) {
-    stopPoolTimer({ keepElapsed: false });
+    stopPoolTimer({ persist: false, clearSession: true });
     const ids = Object.entries(marks)
       .filter(([, v]) => v === markId)
       .map(([id]) => Number(id))
@@ -678,8 +734,8 @@
 
   function finishSession() {
     if (!session) return;
-    if (session.sourceMode === "pool" && poolTimer.running) {
-      stopPoolTimer({ keepElapsed: true });
+    if (session.sourceMode === "pool") {
+      stopPoolTimer({ persist: true });
     }
     applyHubStatsToSession();
     el.title.textContent = session.hubTitle || session.title;
@@ -754,12 +810,12 @@
     clearCurrentPoolMarks();
   });
   el.homeBtn.addEventListener("click", () => {
-    stopPoolTimer({ keepElapsed: false });
+    stopPoolTimer({ persist: true });
     session = null;
     renderHome();
   });
   el.toHome.addEventListener("click", () => {
-    stopPoolTimer({ keepElapsed: false });
+    stopPoolTimer({ persist: true });
     session = null;
     renderHome();
   });
@@ -771,7 +827,7 @@
       startMarked(session.markFilter);
       return;
     }
-    if (session.poolId) startPool(session.poolId);
+    if (session.poolId) startPool(session.poolId, { resetTimer: true });
   });
 
   async function boot() {

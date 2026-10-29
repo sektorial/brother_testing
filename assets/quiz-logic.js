@@ -338,6 +338,25 @@
     );
   }
 
+  function getPoolElapsed(timers, poolId) {
+    const v = timers && timers[String(poolId)];
+    return typeof v === "number" && Number.isFinite(v) && v > 0 ? v : 0;
+  }
+
+  function setPoolElapsed(timers, poolId, elapsedMs) {
+    const next = { ...(timers || {}) };
+    const ms = Math.max(0, Math.floor(Number(elapsedMs) || 0));
+    if (ms <= 0) delete next[String(poolId)];
+    else next[String(poolId)] = ms;
+    return next;
+  }
+
+  function clearPoolElapsed(timers, poolId) {
+    const next = { ...(timers || {}) };
+    delete next[String(poolId)];
+    return next;
+  }
+
   return {
     MARKS,
     QUOTA,
@@ -373,5 +392,8 @@
     validatePoolShape,
     confidenceLabel,
     formatElapsedHms,
+    getPoolElapsed,
+    setPoolElapsed,
+    clearPoolElapsed,
   };
 });

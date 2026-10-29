@@ -120,8 +120,12 @@ def test_ui_has_confirm_button():
     assert "clearAnswersForIds(answers, retryIds)" in app
     assert "startPoolTimer" in app
     assert "stopPoolTimer" in app
+    assert "brother_testing_timers_v1" in app
+    assert "persist: true" in app
     logic = (ROOT / "assets" / "quiz-logic.js").read_text(encoding="utf-8")
     assert "formatElapsedHms" in logic
+    assert "getPoolElapsed" in logic
+    assert "setPoolElapsed" in logic
 
 
 def test_question_3286_repaired():
@@ -138,7 +142,7 @@ def test_question_3286_repaired():
 
 def test_version_files_aligned():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    assert version == "1.0.8"
+    assert version == "1.0.9"
     ver_js = (ROOT / "assets" / "version.js").read_text(encoding="utf-8")
     assert f'APP_VERSION = "{version}"' in ver_js
     html = (ROOT / "index.html").read_text(encoding="utf-8")
